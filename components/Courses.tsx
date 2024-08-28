@@ -1,3 +1,10 @@
+import {
+  AcademicCapIcon,
+  ComputerDesktopIcon,
+  GlobeAltIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
+
 export default function Courses() {
   const courses = [
     {
@@ -5,23 +12,27 @@ export default function Courses() {
       title: "Bachelor of Science in Criminology",
       description:
         "Prepare for a career in law enforcement, criminal justice, and forensic science.",
+      icon: <AcademicCapIcon className="w-10 h-10 text-blue-500" />,
     },
     {
       id: 2,
       title: "Bachelor of Science in Information Science",
       description:
         "Learn the latest in data management, information systems, and technology.",
+      icon: <ComputerDesktopIcon className="w-10 h-10 text-green-500" />,
     },
     {
       id: 3,
       title: "Bachelor of Science in Tourism Management",
       description:
         "Develop skills in hospitality, travel management, and customer service.",
+      icon: <GlobeAltIcon className="w-10 h-10 text-red-500" />,
     },
     {
       id: 4,
       title: "Bachelor of Science in Physical Education",
       description: "Focus on sports science, coaching, and fitness management.",
+      icon: <UserGroupIcon className="w-10 h-10 text-yellow-500" />,
     },
   ];
 
@@ -31,12 +42,15 @@ export default function Courses() {
         {courses.map((course) => (
           <div
             key={course.id}
-            className="bg-white bg-opacity-70 p-6 rounded-lg shadow-md"
+            className="bg-white bg-opacity-70 p-6 rounded-lg shadow-md flex items-start space-x-4"
           >
-            <h3 className="text-2xl font-bold mb-2 text-black">
-              {course.title}
-            </h3>
-            <p className="text-black">{course.description}</p>
+            <div className="flex-shrink-0">{course.icon}</div>
+            <div>
+              <h3 className="text-2xl font-bold mb-2 text-black flex items-center space-x-2">
+                <span>{course.title}</span>
+              </h3>
+              <p className="text-black">{course.description}</p>
+            </div>
           </div>
         ))}
       </div>
