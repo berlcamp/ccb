@@ -1,66 +1,85 @@
-import { Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import { useState } from "react";
+import { Transition } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null)
 
   // Dropdown Links
-  const dropdownLinks: Record<string, string[]> = {
-    "About Us": [
-      "Mission, Vision, Objectives",
-      "Brief History",
-      "Certification Awards",
-      "College/School Hymn",
-      "Campus Map",
-      "Facilities",
-      "Contact Us",
-      "Brochure",
+  const dropdownLinks: Record<string, { name: string; href: string }[]> = {
+    'About Us': [
+      { name: 'Mission, Vision, Objectives', href: '/MissionVisionObjectives' },
+      { name: 'Brief History', href: '/BriefHistory' },
+      { name: 'Certification Awards', href: '/CertificationAwards' },
+      { name: 'College/School Hymn', href: '/CollegeHymn' },
+      { name: 'Campus Map', href: '/CampusMap' },
+      { name: 'Facilities', href: '/Facilities' },
+      { name: 'Contact Us', href: '/ContactUs' },
+      { name: 'Brochure', href: '/Brochure' }
     ],
     Administration: [
-      "Board of Trustees",
-      "Executive Management",
-      "Academic Council",
-      "Administrative Council",
+      { name: 'Board of Trustees', href: '/BoardOfTrustees' },
+      { name: 'Executive Management', href: '/ExecutiveManagement' },
+      { name: 'Academic Council', href: '/AcademicCouncil' },
+      { name: 'Administrative Council', href: '/AdministrativeCouncil' }
     ],
-    Academics: ["Academic offerings", "School and departments", "BCC Students"],
+    Academics: [
+      { name: 'Academic Offerings', href: '/AcademicOfferings' },
+      { name: 'School and Departments', href: '/SchoolsAndDepartments' },
+      { name: 'BCC Students', href: '/BCCStudents' }
+    ],
     Admission: [
-      "Admission requirements",
-      "Admission policy",
-      "Enrollment guide",
-      "Scholarships",
-      "Application for admission",
-      "Pre-registration",
+      { name: 'Admission Requirements', href: '/AdmissionRequirements' },
+      { name: 'Admission Policy', href: '/AdmissionPolicy' },
+      { name: 'Enrollment Guide', href: '/EnrollmentGuide' },
+      { name: 'Scholarships', href: '/Scholarships' },
+      { name: 'Application for Admission', href: '/ApplicationForAdmission' },
+      { name: 'Pre-Registration', href: '/PreRegistration' }
     ],
-    Research: ["Journal", "BCC Research center"],
+    Research: [
+      { name: 'Journal', href: '/Journal' },
+      { name: 'BCC Research Center', href: '/BCCResearchCenter' }
+    ],
     Services: [
-      "Online grace inquiry",
-      "School/college library",
-      "Guidance and counseling",
-      "Student affairs",
-      "Community extension program",
+      { name: 'Online Grade Inquiry', href: '/OnlineGradeInquiry' },
+      { name: 'School/College Library', href: '/SchoolLibrary' },
+      { name: 'Guidance and Counseling', href: '/GuidanceAndCounseling' },
+      { name: 'Student Affairs', href: '/StudentAffairs' },
+      {
+        name: 'Community Extension Program',
+        href: '/CommunityExtensionProgram'
+      }
     ],
-    Updates: ["News", "Photo gallery", "Job opportunity"],
-  };
+    Updates: [
+      { name: 'News', href: '/News' },
+      { name: 'Photo Gallery', href: '/PhotoGallery' },
+      { name: 'Job Opportunity', href: '/JobOpportunity' }
+    ]
+  }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-30 bg-black bg-opacity-20 backdrop-blur-md shadow-md">
+    <header className="fixed top-0 left-0 right-0 z-30 bg-black bg-opacity-50 backdrop-blur-md shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1 flex items-center justify-between">
-        {/* Logo */}
+        {/* Logo and Title */}
         <div className="flex items-center space-x-4">
-          <div className="relative w-16 h-16">
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          <div className="text-2xl font-bold text-white">
-            City College of Bayugan
-          </div>
+          <Link href="/">
+            <div className="flex items-center">
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+              <div className="text-2xl font-bold text-white ml-2">
+                City College of Bayugan
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Hamburger Menu */}
@@ -102,13 +121,13 @@ export default function Header() {
               >
                 <div className="absolute mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   {dropdownLinks[menuItem].map((link) => (
-                    <a
-                      key={link}
-                      href="#"
+                    <Link
+                      key={link.name}
+                      href={link.href}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      {link}
-                    </a>
+                      {link.name}
+                    </Link>
                   ))}
                 </div>
               </Transition>
@@ -140,14 +159,14 @@ export default function Header() {
               <div key={menuItem} className="text-black text-lg">
                 <p className="font-bold">{menuItem}</p>
                 {dropdownLinks[menuItem].map((link) => (
-                  <a
-                    key={link}
-                    href="#"
+                  <Link
+                    key={link.name}
+                    href={link.href}
                     className="block text-sm text-black hover:text-blue-500 transition duration-300"
                     onClick={() => setIsOpen(false)}
                   >
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 ))}
               </div>
             ))}
@@ -155,5 +174,5 @@ export default function Header() {
         </div>
       </Transition>
     </header>
-  );
+  )
 }
