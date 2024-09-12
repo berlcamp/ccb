@@ -3,29 +3,29 @@ export default function News() {
   const news = [
     {
       id: 1,
-      title: "New Academic Program Launch",
-      date: "2024-08-30",
+      title: 'New Academic Program Launch',
+      date: '2024-08-30',
       excerpt:
-        "We are excited to announce the launch of our new Bachelor of Science in Data Science program starting this fall semester.",
+        'We are excited to announce the launch of our new Bachelor of Science in Data Science program starting this fall semester.'
     },
     {
       id: 2,
-      title: "Annual Science Fair Highlights",
-      date: "2024-08-25",
+      title: 'Annual Science Fair Highlights',
+      date: '2024-08-25',
       excerpt:
-        "Our annual science fair showcased incredible student projects and innovations. Congratulations to all participants!",
+        'Our annual science fair showcased incredible student projects and innovations. Congratulations to all participants!'
     },
     {
       id: 3,
-      title: "Upcoming Faculty Research Symposium",
-      date: "2024-08-15",
+      title: 'Upcoming Faculty Research Symposium',
+      date: '2024-08-15',
       excerpt:
-        "Join us for the faculty research symposium where our professors will present their latest research and findings.",
-    },
-  ];
+        'Join us for the faculty research symposium where our professors will present their latest research and findings.'
+    }
+  ]
 
   return (
-    <section className="py-10 bg-[#f0f2f5]">
+    <section className="py-10">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {news.map((item) => (
@@ -40,5 +40,5 @@ export default function News() {
         </div>
       </div>
     </section>
-  );
+  )
 }

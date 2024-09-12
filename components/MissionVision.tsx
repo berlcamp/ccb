@@ -1,9 +1,9 @@
 // components/MissionVision.js
-import { LightBulbIcon, StarIcon } from "@heroicons/react/24/outline";
+import { LightBulbIcon, StarIcon } from '@heroicons/react/24/outline'
 
 export default function MissionVision() {
   return (
-    <section className="px-4 py-16 bg-[#f0f2f5] border-t border-gray-300">
+    <section className="px-4 py-16 bg-[#f0f2f5] h-screen border-t border-gray-300">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mission Column */}
@@ -38,5 +38,5 @@ export default function MissionVision() {
         </div>
       </div>
     </section>
-  );
+  )
 }

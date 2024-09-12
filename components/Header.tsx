@@ -1,3 +1,4 @@
+'use client'
 import { Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
@@ -13,7 +14,7 @@ export default function Header() {
     'About Us': [
       { name: 'Mission, Vision, Objectives', href: '/MissionVisionObjectives' },
       { name: 'Brief History', href: '/BriefHistory' },
-      { name: 'Certification Awards', href: '/CertificationAwards' },
+      { name: 'Certification Awards', href: '/pages/certificates' },
       { name: 'College/School Hymn', href: '/CollegeHymn' },
       { name: 'Campus Map', href: '/CampusMap' },
       { name: 'Facilities', href: '/Facilities' },
@@ -54,7 +55,7 @@ export default function Header() {
       }
     ],
     Updates: [
-      { name: 'News', href: '/News' },
+      { name: 'News', href: '/pages/news' },
       { name: 'Photo Gallery', href: '/PhotoGallery' },
       { name: 'Job Opportunity', href: '/JobOpportunity' }
     ]
@@ -146,15 +147,15 @@ export default function Header() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <div className="md:hidden fixed inset-0 bg-[#f0f2f5] z-40">
+        <div className="md:hidden fixed inset-0 bg-[#f0f2f5] z-40 h-screen overflow-y-auto">
           {/* Close Button */}
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-black"
+            className="fixed top-4 right-4 text-white bg-gray-800 rounded-full"
           >
             <XMarkIcon className="w-6 h-6" />
           </button>
-          <div className="flex flex-col items-end mt-20 space-y-4 px-6 bg-white">
+          <div className="mt-20 space-y-4 px-6 bg-white">
             {Object.keys(dropdownLinks).map((menuItem) => (
               <div key={menuItem} className="text-black text-lg">
                 <p className="font-bold">{menuItem}</p>
