@@ -32,18 +32,24 @@ export default async function Page({ params }: { params: { id: string } }) {
             Error 404 - Page not Found
           </div>
         )}
-        {details && (
+        {details && (details.is_deleted || details.status !== 'published') && (
+          <div className="text-xl flex flex-col justify-start py-32 items-center text-black">
+            Error 404 - Page not Found
+          </div>
+        )}
+        {details && !details.is_deleted && details.status === 'published' && (
           <>
-            <h1 className="text-2xl font-bold text-center text-black mb-8">
-              {details.title}
-            </h1>
-            <div className="md:flex items-start justify-start space-x-2">
-              <div
-                className="md:w-2/3"
-                dangerouslySetInnerHTML={{
-                  __html: details.content
-                }}
-              />
+            <div className="md:flex items-start justify-start space-x-4">
+              <div className="md:w-2/3">
+                <h1 className="text-2xl font-bold text-black mb-6">
+                  {details.title}
+                </h1>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: details.content
+                  }}
+                />
+              </div>
               <PageSidebar />
             </div>
           </>

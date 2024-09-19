@@ -1,13 +1,17 @@
 'use client'
+import { MenuTypes } from '@/types'
+import { fetchMenu } from '@/utils/fetchApi'
 import { Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null)
+
+  const [dynamicMenu, setDynamicMenu] = useState<MenuTypes[] | []>([])
 
   // Dropdown Links
   const dropdownLinks: Record<string, { name: string; href: string }[]> = {
@@ -61,6 +65,14 @@ export default function Header() {
     ]
   }
 
+  useEffect(() => {
+    // Fetch menus
+    ;(async () => {
+      const result = await fetchMenu(99, 0)
+      setDynamicMenu(result.data)
+    })()
+  }, [])
+
   return (
     <header className="fixed top-0 left-0 right-0 z-30 bg-black bg-opacity-50 backdrop-blur-md shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1 flex items-center justify-between">
@@ -69,14 +81,9 @@ export default function Header() {
           <Link href="/">
             <div className="flex items-center">
               <div className="relative w-16 h-16">
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  layout="fill"
-                  objectFit="contain"
-                />
+                <Image src="/logo.png" alt="Logo" width={60} height={60} />
               </div>
-              <div className="text-2xl font-bold text-white ml-2">
+              <div className="text-base font-bold uppercase text-white ml-2">
                 City College of Bayugan
               </div>
             </div>
@@ -99,41 +106,47 @@ export default function Header() {
 
         {/* Main Menu for Desktop */}
         <ul className="hidden md:flex space-x-6 ml-auto">
-          {Object.keys(dropdownLinks).map((menuItem) => (
-            <div
-              key={menuItem}
-              onMouseEnter={() => setHoveredMenu(menuItem)}
-              onMouseLeave={() => setHoveredMenu(null)}
-              className="relative"
-            >
-              <button className="inline-flex justify-center w-full text-white hover:text-blue-500 transition duration-300">
-                {menuItem}
-              </button>
-
-              {/* Submenu on Hover */}
-              <Transition
-                show={hoveredMenu === menuItem}
-                enter="transition ease-out duration-200"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-150"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
+          {dynamicMenu.length > 0 &&
+            dynamicMenu.map((menuItem, i) => (
+              <div
+                key={i}
+                onMouseEnter={() => setHoveredMenu(menuItem.title)}
+                onMouseLeave={() => setHoveredMenu(null)}
+                className="relative"
               >
-                <div className="absolute mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  {dropdownLinks[menuItem].map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </Transition>
-            </div>
-          ))}
+                <button className="inline-flex justify-center w-full text-white hover:text-blue-500 transition duration-300">
+                  {menuItem.title}
+                </button>
+
+                {/* Submenu on Hover */}
+                <Transition
+                  show={hoveredMenu === menuItem.title}
+                  enter="transition ease-out duration-200"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-150"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <div className="absolute mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    {menuItem.sub_menus.length > 0 &&
+                      menuItem.sub_menus.map((submenu, j) => (
+                        <Link
+                          key={j}
+                          href={
+                            submenu.type === 'static-page'
+                              ? `/page/${submenu.slug}`
+                              : `/pages/${submenu.type}`
+                          }
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {submenu.title}
+                        </Link>
+                      ))}
+                  </div>
+                </Transition>
+              </div>
+            ))}
         </ul>
       </nav>
 
@@ -147,7 +160,7 @@ export default function Header() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <div className="md:hidden fixed inset-0 bg-[#f0f2f5] z-40 h-screen overflow-y-auto">
+        <div className="md:hidden fixed inset-0 bg-gradient-to-r from-lime-500 via-green-400 to-green-600 z-40 h-screen overflow-y-auto">
           {/* Close Button */}
           <button
             onClick={() => setIsOpen(false)}
@@ -155,22 +168,28 @@ export default function Header() {
           >
             <XMarkIcon className="w-6 h-6" />
           </button>
-          <div className="mt-20 space-y-4 px-6 bg-white">
-            {Object.keys(dropdownLinks).map((menuItem) => (
-              <div key={menuItem} className="text-black text-lg">
-                <p className="font-bold">{menuItem}</p>
-                {dropdownLinks[menuItem].map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="block text-sm text-black hover:text-blue-500 transition duration-300"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            ))}
+          <div className="mt-20 space-y-6 py-4 px-6 bg-green-700">
+            {dynamicMenu.length > 0 &&
+              dynamicMenu.map((menuItem, i) => (
+                <div key={i} className="text-gray-200 text-lg space-y-2">
+                  <p className="font-bold">{menuItem.title}</p>
+                  {menuItem.sub_menus.length > 0 &&
+                    menuItem.sub_menus.map((submenu, j) => (
+                      <Link
+                        key={j}
+                        href={
+                          submenu.type === 'static-page'
+                            ? `/page/${submenu.slug}`
+                            : `/pages/${submenu.type}`
+                        }
+                        className="block text-sm text-white hover:text-gray-200 transition duration-300"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {submenu.title}
+                      </Link>
+                    ))}
+                </div>
+              ))}
           </div>
         </div>
       </Transition>

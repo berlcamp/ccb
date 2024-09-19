@@ -11,26 +11,19 @@ import {
   Title,
   TopBar
 } from '@/components'
-import { fetchPages } from '@/utils/fetchApi'
+import { fetchMenu } from '@/utils/fetchApi'
 import { Menu, Transition } from '@headlessui/react'
-import {
-  ChevronDownIcon,
-  PencilSquareIcon,
-  TrashIcon
-} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, PencilSquareIcon } from '@heroicons/react/20/solid'
 import React, { Fragment, useEffect, useState } from 'react'
 
-import Filters from './Filters'
-
 // Types
-import type { PagesFormTypes } from '@/types'
+import type { MenuTypes } from '@/types'
 
 // Redux imports
 import { useFilter } from '@/context/FilterContext'
 import { useSupabase } from '@/context/SupabaseProvider'
 import { updateList } from '@/GlobalRedux/Features/listSlice'
 import { updateResultCounter } from '@/GlobalRedux/Features/resultsCounterSlice'
-import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import AddEditModal from './AddEditModal'
 
@@ -39,15 +32,9 @@ const Page: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string>('')
-  const [list, setList] = useState<PagesFormTypes[]>([])
-  const [editData, setEditData] = useState<PagesFormTypes | null>(null)
+  const [list, setList] = useState<MenuTypes[]>([])
+  const [editData, setEditData] = useState<MenuTypes | null>(null)
   const [perPageCount, setPerPageCount] = useState<number>(10)
-
-  const [toTrash, setToTrash] = useState(true)
-
-  // Filters
-  const [filterKeyword, setFilterKeyword] = useState<string>('')
-  const [filterType, setFilterType] = useState<string>('')
 
   const { setToast } = useFilter()
   const { supabase } = useSupabase()
@@ -61,11 +48,7 @@ const Page: React.FC = () => {
     setLoading(true)
 
     try {
-      const result = await fetchPages(
-        { filterKeyword, filterType },
-        perPageCount,
-        0
-      )
+      const result = await fetchMenu(perPageCount, 0)
 
       // update the list in redux
       dispatch(updateList(result.data))
@@ -89,11 +72,7 @@ const Page: React.FC = () => {
     setLoading(true)
 
     try {
-      const result = await fetchPages(
-        { filterKeyword, filterType },
-        perPageCount,
-        list.length
-      )
+      const result = await fetchMenu(perPageCount, list.length)
 
       // update the list in redux
       const newList = [...list, ...result.data]
@@ -193,14 +172,13 @@ const Page: React.FC = () => {
     setEditData(null)
   }
 
-  const handleEdit = (item: PagesFormTypes) => {
+  const handleEdit = (item: MenuTypes) => {
     setShowAddModal(true)
     setEditData(item)
   }
 
-  const handleDelete = (id: string, trash: boolean) => {
+  const handleDelete = (id: string) => {
     setSelectedId(id)
-    setToTrash(trash)
     setShowDeleteModal(true)
   }
 
@@ -214,7 +192,7 @@ const Page: React.FC = () => {
     setList([])
     void fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterKeyword, filterType, perPageCount])
+  }, [perPageCount])
 
   const isDataEmpty = !Array.isArray(list) || list.length < 1 || !list
 
@@ -227,20 +205,12 @@ const Page: React.FC = () => {
       <div className="app__main">
         <div>
           <div className="app__title">
-            <Title title="Pages" />
+            <Title title="Main Menu" />
             <CustomButton
               containerStyles="app__btn_green"
-              title="Add New Page"
+              title="Add New Menu"
               btnType="button"
               handleClick={handleAdd}
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="app__filters">
-            <Filters
-              setFilterType={setFilterType}
-              setFilterKeyword={setFilterKeyword}
             />
           </div>
 
@@ -258,9 +228,7 @@ const Page: React.FC = () => {
               <thead className="app__thead">
                 <tr>
                   <th className="app__th pl-4"></th>
-                  <th className="app__th">Type</th>
                   <th className="app__th">Title</th>
-                  <th className="app__th">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -298,32 +266,6 @@ const Page: React.FC = () => {
                                     <span>Edit</span>
                                   </div>
                                 </Menu.Item>
-                                {!item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, true)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Move to Trashed</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
-                                {item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, false)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Delete Permanently</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
                               </div>
                             </Menu.Items>
                           </Transition>
@@ -331,72 +273,9 @@ const Page: React.FC = () => {
                       </td>
                       <th className="app__th_firstcol">
                         <div className="space-x-2">
-                          <span className="capitalize">{item.type}</span>
-                          {item.is_deleted ? (
-                            <span className="bg-red-200 border border-red-300 font-bold p-px text-red-900">
-                              Trashed
-                            </span>
-                          ) : (
-                            <>
-                              {item.status === 'draft' && (
-                                <span className="bg-blue-200 border border-blue-300 font-bold p-px text-blue-900">
-                                  Draft
-                                </span>
-                              )}
-                              {item.status === 'published' && (
-                                <span className="bg-green-200 border border-green-300 font-bold p-px text-green-900">
-                                  Published
-                                </span>
-                              )}
-                            </>
-                          )}
+                          <span className="capitalize">{item.title}</span>
                         </div>
                       </th>
-                      <td className="app__td">
-                        <div>{item.title}</div>
-                      </td>
-                      <td className="app__td">
-                        {item.is_deleted ? (
-                          <CustomButton
-                            containerStyles="app__btn_blue"
-                            title="Restore"
-                            btnType="button"
-                            handleClick={() => handleRestore(item.id)}
-                          />
-                        ) : (
-                          <>
-                            {item.status === 'draft' && (
-                              <CustomButton
-                                containerStyles="app__btn_green_xs"
-                                title="Publish"
-                                btnType="button"
-                                handleClick={() => handlePublish(item.id)}
-                              />
-                            )}
-                            {item.status === 'published' && (
-                              <div className="flex space-x-2">
-                                <CustomButton
-                                  containerStyles="app__btn_red_xs"
-                                  title="Unpublish"
-                                  btnType="button"
-                                  handleClick={() => handleUnpublish(item.id)}
-                                />
-                                <Link
-                                  target="_blank"
-                                  href={
-                                    item.type === 'static-page'
-                                      ? `/page/${item.id}`
-                                      : `/pages/${item.slug}`
-                                  }
-                                  className="app__btn_blue_xs"
-                                >
-                                  View Page
-                                </Link>
-                              </div>
-                            )}
-                          </>
-                        )}
-                      </td>
                     </tr>
                   ))}
                 {loading && <TableRowLoading cols={4} rows={2} />}
@@ -424,8 +303,8 @@ const Page: React.FC = () => {
           {showDeleteModal && (
             <DeleteModal
               id={selectedId}
-              table="ccb_pages"
-              trash={toTrash}
+              table="ccb_menu"
+              trash={false}
               hideModal={() => setShowDeleteModal(false)}
             />
           )}

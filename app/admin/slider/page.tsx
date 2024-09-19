@@ -1,8 +1,8 @@
 'use client'
 
 import {
+  ConfirmModal,
   CustomButton,
-  DeleteModal,
   PerPage,
   SettingsSideBar,
   ShowMore,
@@ -11,26 +11,20 @@ import {
   Title,
   TopBar
 } from '@/components'
-import { fetchPages } from '@/utils/fetchApi'
+import { fetchSlider } from '@/utils/fetchApi'
 import { Menu, Transition } from '@headlessui/react'
-import {
-  ChevronDownIcon,
-  PencilSquareIcon,
-  TrashIcon
-} from '@heroicons/react/20/solid'
+import { ChevronDownIcon, TrashIcon } from '@heroicons/react/20/solid'
 import React, { Fragment, useEffect, useState } from 'react'
 
-import Filters from './Filters'
-
 // Types
-import type { PagesFormTypes } from '@/types'
+import type { SliderTypes } from '@/types'
 
 // Redux imports
 import { useFilter } from '@/context/FilterContext'
 import { useSupabase } from '@/context/SupabaseProvider'
 import { updateList } from '@/GlobalRedux/Features/listSlice'
 import { updateResultCounter } from '@/GlobalRedux/Features/resultsCounterSlice'
-import Link from 'next/link'
+import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux'
 import AddEditModal from './AddEditModal'
 
@@ -39,15 +33,11 @@ const Page: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string>('')
-  const [list, setList] = useState<PagesFormTypes[]>([])
-  const [editData, setEditData] = useState<PagesFormTypes | null>(null)
+  const [list, setList] = useState<SliderTypes[]>([])
+  const [editData, setEditData] = useState<SliderTypes | null>(null)
   const [perPageCount, setPerPageCount] = useState<number>(10)
 
-  const [toTrash, setToTrash] = useState(true)
-
-  // Filters
-  const [filterKeyword, setFilterKeyword] = useState<string>('')
-  const [filterType, setFilterType] = useState<string>('')
+  const [deleting, setDeleting] = useState(false)
 
   const { setToast } = useFilter()
   const { supabase } = useSupabase()
@@ -61,11 +51,7 @@ const Page: React.FC = () => {
     setLoading(true)
 
     try {
-      const result = await fetchPages(
-        { filterKeyword, filterType },
-        perPageCount,
-        0
-      )
+      const result = await fetchSlider(perPageCount, 0)
 
       // update the list in redux
       dispatch(updateList(result.data))
@@ -89,11 +75,7 @@ const Page: React.FC = () => {
     setLoading(true)
 
     try {
-      const result = await fetchPages(
-        { filterKeyword, filterType },
-        perPageCount,
-        list.length
-      )
+      const result = await fetchSlider(perPageCount, list.length)
 
       // update the list in redux
       const newList = [...list, ...result.data]
@@ -116,7 +98,7 @@ const Page: React.FC = () => {
   const handleRestore = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('ccb_pages')
+        .from('ccb_sliders')
         .update({ is_deleted: false })
         .eq('id', id)
       if (error) throw new Error(error.message)
@@ -141,7 +123,7 @@ const Page: React.FC = () => {
   const handlePublish = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('ccb_pages')
+        .from('ccb_sliders')
         .update({ status: 'published' })
         .eq('id', id)
       if (error) throw new Error(error.message)
@@ -166,7 +148,7 @@ const Page: React.FC = () => {
   const handleUnpublish = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('ccb_pages')
+        .from('ccb_sliders')
         .update({ status: 'draft' })
         .eq('id', id)
       if (error) throw new Error(error.message)
@@ -193,15 +175,58 @@ const Page: React.FC = () => {
     setEditData(null)
   }
 
-  const handleEdit = (item: PagesFormTypes) => {
-    setShowAddModal(true)
-    setEditData(item)
+  const confirmDelete = (id: string) => {
+    setSelectedId(id)
+    setShowDeleteModal(true)
   }
 
-  const handleDelete = (id: string, trash: boolean) => {
-    setSelectedId(id)
-    setToTrash(trash)
-    setShowDeleteModal(true)
+  const handleDelete = async () => {
+    if (deleting) return
+
+    setDeleting(true)
+
+    try {
+      // delete permanently
+      const { error } = await supabase
+        .from('ccb_sliders')
+        .delete()
+        .eq('id', selectedId)
+      if (error) throw new Error(error.message)
+
+      // delete the existing image on supabase storage
+      const { data: files, error: error2 } = await supabase.storage
+        .from('hrm_public')
+        .list(`ccb_slider/${selectedId}`)
+      if (error2) throw new Error(error2.message)
+      if (files.length > 0) {
+        const filesToRemove = files.map(
+          (x: { name: string }) => `ccb_slider/${selectedId}/${x.name}`
+        )
+        const { error: error3 } = await supabase.storage
+          .from('hrm_public')
+          .remove(filesToRemove)
+        if (error3) throw new Error(error3.message)
+      }
+
+      // Update data in redux
+      const items = [...globallist]
+      const updatedList = items.filter((item) => item.id !== selectedId)
+      dispatch(updateList(updatedList))
+
+      // Updating showing text in redux
+      dispatch(
+        updateResultCounter({
+          showing: Number(resultsCounter.showing) - 1,
+          results: Number(resultsCounter.results) - 1
+        })
+      )
+      setShowDeleteModal(false)
+      setDeleting(false)
+      // pop up the success message
+      setToast('success', 'Successfully Deleted!')
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   // Update list whenever list in redux updates
@@ -214,7 +239,7 @@ const Page: React.FC = () => {
     setList([])
     void fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterKeyword, filterType, perPageCount])
+  }, [perPageCount])
 
   const isDataEmpty = !Array.isArray(list) || list.length < 1 || !list
 
@@ -227,20 +252,12 @@ const Page: React.FC = () => {
       <div className="app__main">
         <div>
           <div className="app__title">
-            <Title title="Pages" />
+            <Title title="Homepage Slider" />
             <CustomButton
               containerStyles="app__btn_green"
-              title="Add New Page"
+              title="Add New Slide"
               btnType="button"
               handleClick={handleAdd}
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="app__filters">
-            <Filters
-              setFilterType={setFilterType}
-              setFilterKeyword={setFilterKeyword}
             />
           </div>
 
@@ -258,8 +275,8 @@ const Page: React.FC = () => {
               <thead className="app__thead">
                 <tr>
                   <th className="app__th pl-4"></th>
-                  <th className="app__th">Type</th>
-                  <th className="app__th">Title</th>
+                  <th className="app__th">Image</th>
+                  <th className="app__th">Status</th>
                   <th className="app__th">Action</th>
                 </tr>
               </thead>
@@ -291,47 +308,28 @@ const Page: React.FC = () => {
                               <div className="py-1">
                                 <Menu.Item>
                                   <div
-                                    onClick={() => handleEdit(item)}
+                                    onClick={() => confirmDelete(item.id)}
                                     className="app__dropdown_item"
                                   >
-                                    <PencilSquareIcon className="w-4 h-4" />
-                                    <span>Edit</span>
+                                    <TrashIcon className="w-4 h-4" />
+                                    <span>Delete</span>
                                   </div>
                                 </Menu.Item>
-                                {!item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, true)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Move to Trashed</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
-                                {item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, false)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Delete Permanently</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
                               </div>
                             </Menu.Items>
                           </Transition>
                         </Menu>
                       </td>
                       <th className="app__th_firstcol">
+                        <Image
+                          src={`https://nuhirhfevxoonendpfsm.supabase.co/storage/v1/object/public/${item.content}`}
+                          alt="slider image"
+                          width={100}
+                          height={100}
+                        />
+                      </th>
+                      <td className="app__td">
                         <div className="space-x-2">
-                          <span className="capitalize">{item.type}</span>
                           {item.is_deleted ? (
                             <span className="bg-red-200 border border-red-300 font-bold p-px text-red-900">
                               Trashed
@@ -351,9 +349,6 @@ const Page: React.FC = () => {
                             </>
                           )}
                         </div>
-                      </th>
-                      <td className="app__td">
-                        <div>{item.title}</div>
                       </td>
                       <td className="app__td">
                         {item.is_deleted ? (
@@ -374,32 +369,19 @@ const Page: React.FC = () => {
                               />
                             )}
                             {item.status === 'published' && (
-                              <div className="flex space-x-2">
-                                <CustomButton
-                                  containerStyles="app__btn_red_xs"
-                                  title="Unpublish"
-                                  btnType="button"
-                                  handleClick={() => handleUnpublish(item.id)}
-                                />
-                                <Link
-                                  target="_blank"
-                                  href={
-                                    item.type === 'static-page'
-                                      ? `/page/${item.id}`
-                                      : `/pages/${item.slug}`
-                                  }
-                                  className="app__btn_blue_xs"
-                                >
-                                  View Page
-                                </Link>
-                              </div>
+                              <CustomButton
+                                containerStyles="app__btn_red_xs"
+                                title="Unpublish"
+                                btnType="button"
+                                handleClick={() => handleUnpublish(item.id)}
+                              />
                             )}
                           </>
                         )}
                       </td>
                     </tr>
                   ))}
-                {loading && <TableRowLoading cols={4} rows={2} />}
+                {loading && <TableRowLoading cols={3} rows={2} />}
               </tbody>
             </table>
             {!loading && isDataEmpty && (
@@ -422,11 +404,12 @@ const Page: React.FC = () => {
 
           {/* Delete Modal */}
           {showDeleteModal && (
-            <DeleteModal
-              id={selectedId}
-              table="ccb_pages"
-              trash={toTrash}
-              hideModal={() => setShowDeleteModal(false)}
+            <ConfirmModal
+              header="Confirmation"
+              btnText="Confirm"
+              message="Please confirm this action"
+              onConfirm={handleDelete}
+              onCancel={() => setShowDeleteModal(false)}
             />
           )}
         </div>

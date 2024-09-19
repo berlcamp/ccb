@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  @apply text-4xl font-bold;
+}
+
+h2 {
+  @apply text-3xl font-bold;
+}
+
+h3 {
+  @apply text-2xl font-bold;
+}
+
+h4 {
+  @apply text-xl font-bold;
+}
+
+h5 {
+  @apply text-lg font-bold;
+}
+
+h6 {
+  @apply text-base font-bold;
+}
+
 /* Additional styles for the arrow */
 .app__main {
   @apply lg:ml-64 mt-20 pb-14;
@@ -104,6 +128,15 @@
 }
 .app__btn_orange {
   @apply bg-orange-500 hover:bg-orange-600 border active:bg-orange-500 border-orange-600 font-bold px-2 py-1 text-xs text-white rounded-sm;
+}
+.app__btn_red_xs {
+  @apply bg-red-500 hover:bg-red-600 active:bg-red-500 border border-red-600 px-1 py-px text-xs text-white rounded-sm;
+}
+.app__btn_blue_xs {
+  @apply bg-blue-500 hover:bg-blue-600 active:bg-blue-500 border border-blue-600 px-1 py-px text-xs text-white rounded-sm;
+}
+.app__btn_green_xs {
+  @apply bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-500 border border-emerald-600 font-bold px-2 py-px text-[10px] text-white rounded-sm;
 }
 .app__dialog_panel {
   @apply relative w-full max-w-lg max-h-[90vh] overflow-y-auto transform rounded-md bg-white p-4 text-left shadow-xl transition-all flex flex-col gap-5;

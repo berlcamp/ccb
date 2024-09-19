@@ -90,15 +90,40 @@ export interface AccountTypes {
 export interface PagesFormTypes {
   id: string
   title: string
+  excerpt: string
+  thumbnail_photo: string
   status: string
   content: string
   type: string
   sidebar_type: string
   is_deleted: boolean
   publish_date: string
+  slug?: string
+}
+
+export interface MenuTypes {
+  id: string
+  title: string
+  type: string
+  sub_menus: SubmenuTypes[]
+}
+
+export interface SubmenuTypes {
+  title: string
+  type: string
+  slug?: string
+  ref: number
 }
 
 export interface PageSlugsTypes {
   title: string
   slug: string
+}
+
+export interface SliderTypes {
+  id: string
+  title: string
+  content: string
+  status: string
+  is_deleted: boolean
 }

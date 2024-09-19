@@ -32,6 +32,7 @@ export default async function AdminLayout({
 
   let sysAccess: UserAccessTypes[] | null = []
   let sysUsers: Employee[] | null = []
+  let news: any[] | null = []
 
   if (session) {
     try {
@@ -66,6 +67,24 @@ export default async function AdminLayout({
     }
   }
 
+  try {
+    const { data: newsData, error } = await supabase
+      .from('ccb_pages')
+      .select()
+      .eq('type', 'news')
+      .eq('status', 'published')
+      .eq('is_deleted', false)
+      .order('publish_date', { ascending: false })
+
+    if (error) {
+      void logError('root layout news access', 'ccb_news', '', error.message)
+      throw new Error(error.message)
+    }
+    news = newsData
+  } catch (err) {
+    return 'Something went wrong, please reload the page.'
+  }
+
   return (
     <html lang="en">
       <body className="relative bg-gradient-to-r from-lime-500 via-green-400 to-green-600">
@@ -73,6 +92,7 @@ export default async function AdminLayout({
           systemAccess={sysAccess}
           session={session}
           systemUsers={sysUsers}
+          news={news}
         >
           <SupabaseListener serverAccessToken={session?.access_token} />
           {!session && children}

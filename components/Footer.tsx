@@ -81,16 +81,10 @@ export default function Footer() {
           {/* Links */}
           <div className="flex flex-col md:flex-row space-y-4 md:space-x-8 md:space-y-0 mb-6 md:mb-0">
             <a
-              href="#privacy-policy"
+              href="/page/10"
               className="hover:text-blue-500 transition duration-300"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#about-us"
-              className="hover:text-blue-500 transition duration-300"
-            >
-              About Us
             </a>
             {!loggedIn && (
               <button

@@ -7,16 +7,11 @@ import { updateList } from '@/GlobalRedux/Features/listSlice'
 import { updateResultCounter } from '@/GlobalRedux/Features/resultsCounterSlice'
 import { PagesFormTypes } from '@/types'
 import { fetchDynamicPages } from '@/utils/fetchApi'
-import { createBrowserClient } from '@supabase/ssr'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-const serviceAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
-const supabase = createBrowserClient(supabaseUrl, serviceAnonKey)
 
 export default function Pages({ params }: { params: { slug: string } }) {
   const slug = params.slug
@@ -77,27 +72,6 @@ export default function Pages({ params }: { params: { slug: string } }) {
     }
   }
 
-  const createExcerpt = (content: string, length: number) => {
-    const strippedContent = content.replace(/<[^>]*>/g, '') // Remove HTML tags
-    return strippedContent.length > length
-      ? strippedContent.substring(0, length) + '...'
-      : strippedContent
-  }
-
-  const getImg = (content: string) => {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(content, 'text/html')
-
-    // Get the first <img> tag
-    const imgTag = doc.querySelector('img')
-
-    if (imgTag) {
-      return imgTag.src
-    } else {
-      return ''
-    }
-  }
-
   // Update list whenever list in redux updates
   useEffect(() => {
     setList(globallist)
@@ -118,7 +92,7 @@ export default function Pages({ params }: { params: { slug: string } }) {
       {/* Main Content Wrapper */}
       <main className="flex-grow">
         <div className="container min-h-screen mx-auto px-4 md:px-8 py-8 my-8 bg-white shadow-md rounded-lg">
-          <h1 className="text-2xl font-bold text-center text-black mb-8 capitalize">
+          <h1 className="text-2xl font-bold text-black mb-6 capitalize">
             {slug}
           </h1>
           <div className="md:flex items-start justify-start space-x-2">
@@ -142,9 +116,9 @@ export default function Pages({ params }: { params: { slug: string } }) {
 
                     {/* Thumbnail Image */}
                     <div className="mb-4">
-                      {getImg(page.content) && (
+                      {page.thumbnail_photo && (
                         <Image
-                          src={getImg(page.content)}
+                          src={page.thumbnail_photo}
                           width={200}
                           height={200}
                           alt=""
@@ -153,11 +127,7 @@ export default function Pages({ params }: { params: { slug: string } }) {
                     </div>
 
                     {/* Excerpt */}
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: createExcerpt(page.content, 200)
-                      }}
-                    />
+                    <div>{page.excerpt}</div>
                   </div>
                 ))}
               {loading && <OneColLayoutLoading rows={2} />}

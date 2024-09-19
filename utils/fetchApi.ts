@@ -222,3 +222,55 @@ export async function fetchDynamicPages(
     return { data: [], count: 0 }
   }
 }
+
+export async function fetchMenu(perPageCount: number, rangeFrom: number) {
+  try {
+    let query = supabase.from('ccb_menu').select('*', { count: 'exact' })
+
+    // Per Page from context
+    const from = rangeFrom
+    const to = from + (perPageCount - 1)
+
+    // Per Page from context
+    query = query.range(from, to)
+
+    // Order By
+    query = query.order('id', { ascending: true })
+
+    const { data, error, count } = await query
+
+    if (error) {
+      throw new Error(error.message)
+    }
+    return { data, count }
+  } catch (error) {
+    console.error('fetch menu error', error)
+    return { data: [], count: 0 }
+  }
+}
+
+export async function fetchSlider(perPageCount: number, rangeFrom: number) {
+  try {
+    let query = supabase.from('ccb_sliders').select('*', { count: 'exact' })
+
+    // Per Page from context
+    const from = rangeFrom
+    const to = from + (perPageCount - 1)
+
+    // Per Page from context
+    query = query.range(from, to)
+
+    // Order By
+    query = query.order('id', { ascending: true })
+
+    const { data, error, count } = await query
+
+    if (error) {
+      throw new Error(error.message)
+    }
+    return { data, count }
+  } catch (error) {
+    console.error('fetch menu error', error)
+    return { data: [], count: 0 }
+  }
+}

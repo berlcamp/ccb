@@ -1,25 +1,31 @@
 'use client'
 
-import Courses from '@/components/Courses'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import MissionVision from '@/components/MissionVision'
 import News from '@/components/News'
+import { useSupabase } from '@/context/SupabaseProvider'
+import { SliderTypes } from '@/types'
+import { fetchSlider } from '@/utils/fetchApi'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const slides = [<Courses />, <MissionVision />]
+  // const [slides, setSlides] = useState([<Courses />, <MissionVision />])
+  const [slides, setSlides] = useState<SliderTypes[] | []>([])
   const slideInterval = 5000 // 5 seconds
+
+  const { news } = useSupabase()
 
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext()
     }, slideInterval)
 
+    console.log(slideInterval)
     return () => clearInterval(interval)
-  }, [currentSlide])
+  }, [currentSlide, slides.length])
 
   const handleNext = () => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
@@ -30,6 +36,15 @@ export default function Home() {
       (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
     )
   }
+
+  useEffect(() => {
+    // Fetch sliders
+    ;(async () => {
+      const result = await fetchSlider(99, 0)
+      const filtered = result.data.filter((i) => i.status === 'published')
+      setSlides(filtered)
+    })()
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen pt-[74px]">
@@ -59,20 +74,45 @@ export default function Home() {
               className="flex transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {slides.map((slide, index) => (
-                <div key={index} className="w-full flex-shrink-0">
-                  {slide}
-                </div>
-              ))}
+              {slides.length > 0 &&
+                slides.map((slide, index) => (
+                  <div
+                    key={index}
+                    className="relative w-full h-[500px] flex-shrink-0"
+                  >
+                    {/* Background image */}
+                    <div className="absolute inset-0 w-full h-full -z-10">
+                      <Image
+                        src={`https://nuhirhfevxoonendpfsm.supabase.co/storage/v1/object/public/${slide.content}`}
+                        alt="background cover"
+                        fill={true}
+                        style={{ objectFit: 'cover' }}
+                        className="blur-md" // Adds a blur effect to the background
+                        priority
+                      />
+                    </div>
+
+                    {/* Foreground image */}
+                    <div className="relative w-full h-full flex justify-center items-center">
+                      <Image
+                        src={`https://nuhirhfevxoonendpfsm.supabase.co/storage/v1/object/public/${slide.content}`}
+                        alt="main image"
+                        fill={true}
+                        style={{ objectFit: 'contain' }}
+                        priority
+                      />
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
 
         {/* News Section */}
-        <section className="py-16 px-4 md:px-8 border-t border-gray-300">
+        <section className="py-8 px-4 md:px-8 border-t border-gray-300">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-black">Latest News</h2>
-            <News />
+            <News news={news} />
           </div>
         </section>
       </main>

@@ -58,8 +58,10 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
   const handleCreate = async (formdata: PagesFormTypes) => {
     const newData = {
       title: formdata.title,
+      excerpt: createExcerpt(content, 200),
+      thumbnail_photo: getImg(content),
       type: formdata.type,
-      publish_date: formdata.publish_date,
+      publish_date: formdata.publish_date ? formdata.publish_date : null,
       content: content,
       is_deleted: false,
       status: 'draft'
@@ -125,8 +127,10 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
 
     const newData = {
       title: formdata.title,
+      excerpt: createExcerpt(content, 200),
+      thumbnail_photo: getImg(content),
       type: formdata.type,
-      publish_date: formdata.publish_date,
+      publish_date: formdata.publish_date ? formdata.publish_date : null,
       content: content
     }
 
@@ -175,6 +179,27 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
     }
   }
 
+  const createExcerpt = (content: string, length: number) => {
+    const strippedContent = content.replace(/<[^>]*>/g, '') // Remove HTML tags
+    return strippedContent.length > length
+      ? strippedContent.substring(0, length) + '...'
+      : strippedContent
+  }
+
+  const getImg = (content: string) => {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(content, 'text/html')
+
+    // Get the first <img> tag
+    const imgTag = doc.querySelector('img')
+
+    if (imgTag) {
+      return imgTag.src
+    } else {
+      return ''
+    }
+  }
+
   // manually set the defaultValues of use-form-hook whenever the component receives new props.
   useEffect(() => {
     reset({
@@ -188,7 +213,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
   return (
     <>
       <div className="app__modal_wrapper">
-        <div className="app__modal_wrapper2">
+        <div className="app__modal_wrapper2_large">
           <div className="app__modal_wrapper3">
             <div className="app__modal_header">
               <h5 className="app__modal_header_text">Page Details</h5>
