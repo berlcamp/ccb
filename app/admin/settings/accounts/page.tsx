@@ -34,6 +34,8 @@ const Page: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState<AccountTypes[]>([])
 
+  const { hasAccess } = useFilter()
+
   const [showAddModal, setShowAddModal] = useState(false)
   const [showConfirmInactiveModal, setShowConfirmInactiveModal] =
     useState(false)
@@ -188,7 +190,8 @@ const Page: React.FC = () => {
   const isDataEmpty = !Array.isArray(list) || list.length < 1 || !list
 
   // Check access from permission settings or Super Admins
-  if (!superAdmins.includes(session.user.email)) return <Unauthorized />
+  if (!hasAccess('settings') && !superAdmins.includes(session.user.email))
+    return <Unauthorized />
 
   return (
     <>
