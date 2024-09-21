@@ -334,6 +334,28 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                   </div>
                 </div>
               </div>
+              <div className="app__form_field_container">
+                <div className="w-full">
+                  <div className="app__label_standard">Displayed Sidebar:</div>
+                  <div>
+                    <select
+                      {...register('type', { required: true })}
+                      className="app__select_standard"
+                    >
+                      <option value="None">None</option>
+                      <option value="news">News Sidebar</option>
+                      <option value="aboutus">About Us Sidebar</option>
+                      <option value="administration">
+                        Administration Sidebar
+                      </option>
+                      <option value="administration">Academics Sidebar</option>
+                      <option value="administration">Research Sidebar</option>
+                      <option value="administration">Services Sidebar</option>
+                      <option value="administration">Updates Sidebar</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
               <div className="app__modal_footer">
                 <button type="submit" className="app__btn_green_sm">

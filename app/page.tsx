@@ -6,8 +6,16 @@ import News from '@/components/News'
 import { useSupabase } from '@/context/SupabaseProvider'
 import { SliderTypes } from '@/types'
 import { fetchSlider } from '@/utils/fetchApi'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import {
+  AcademicCapIcon,
+  BuildingLibraryIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PresentationChartBarIcon,
+  UserGroupIcon
+} from '@heroicons/react/20/solid'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -50,7 +58,68 @@ export default function Home() {
       {/* Main Menu */}
       <Header />
       {/* Main Content Wrapper */}
-      <main className="flex-grow">
+      <main className="flex-grow relative">
+        {/* Floating box (static, outside of the slider) */}
+        <div className="absolute top-[480px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-8 py-4 rounded-md shadow-lg z-30">
+          <ul className="md:flex space-x-20 items-center justify-center text-center">
+            <li className="my-4">
+              <Link
+                href="/#"
+                className="hover:underline text-xl uppercase font-light"
+              >
+                <div className="flex items-center space-x-4">
+                  <AcademicCapIcon className="w-10 h-10 text-green-500 mx-auto mb-1" />
+                  <span>Students</span>
+                </div>
+              </Link>
+            </li>
+            <li className="my-4">
+              <Link
+                href="/#"
+                className="hover:underline text-xl uppercase font-light"
+              >
+                <div className="flex items-center space-x-4">
+                  <BuildingLibraryIcon className="w-10 h-10 text-green-500 mx-auto mb-1" />
+                  <span>Facilities</span>
+                </div>
+              </Link>
+            </li>
+            <li className="my-4">
+              <Link
+                href="/#"
+                className="hover:underline text-xl uppercase font-light"
+              >
+                <div className="flex items-center space-x-4">
+                  <PresentationChartBarIcon className="w-10 h-10 text-green-500 mx-auto mb-1" />
+                  <span>Research</span>
+                </div>
+              </Link>
+            </li>
+            <li className="my-4">
+              <Link
+                href="/#"
+                className="hover:underline text-xl uppercase font-light"
+              >
+                <div className="flex items-center space-x-4">
+                  <UserGroupIcon className="w-10 h-10 text-green-500 mx-auto mb-1" />
+                  <span>Extension</span>
+                </div>
+              </Link>
+            </li>
+            <li className="my-4">
+              <Link
+                href="/#"
+                className="hover:underline text-xl uppercase font-light"
+              >
+                <div className="flex items-center space-x-4">
+                  <UserGroupIcon className="w-10 h-10 text-green-500 mx-auto mb-1" />
+                  <span>Enrollment</span>
+                </div>
+              </Link>
+            </li>
+          </ul>
+        </div>
+
         {/* Sliding div */}
         <div className="relative overflow-hidden">
           <div className="relative">
@@ -70,7 +139,7 @@ export default function Home() {
 
             {/* Slide container */}
             <div
-              className="flex h-[500px] transition-transform duration-700 ease-in-out"
+              className="flex h-[600px] transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {slides.length > 0 &&
@@ -106,7 +175,7 @@ export default function Home() {
 
         {/* News Section */}
         <section className="py-8 px-4 md:px-8 border-t border-gray-300">
-          <div className="container mx-auto">
+          <div className="container mx-auto py-10">
             <h2 className="text-3xl font-bold text-black">Latest News</h2>
             <News news={news} />
           </div>

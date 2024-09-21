@@ -1,5 +1,6 @@
 import { PagesFormTypes } from '@/types'
 import { format } from 'date-fns'
+import Image from 'next/image'
 import Link from 'next/link'
 
 // components/News.js
@@ -21,6 +22,17 @@ export default function News({ news }: { news: PagesFormTypes[] }) {
                     {format(item.publish_date, 'MMMM d, yyyy')}
                   </p>
                 )}
+                {/* Thumbnail Image */}
+                <div className="mb-4">
+                  {item.thumbnail_photo && (
+                    <Image
+                      src={item.thumbnail_photo}
+                      width={200}
+                      height={200}
+                      alt=""
+                    />
+                  )}
+                </div>
                 <p className="text-gray-700">{item.excerpt}</p>
               </div>
             ))}

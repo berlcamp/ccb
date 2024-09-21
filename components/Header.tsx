@@ -128,7 +128,7 @@ export default function Header() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <div className="absolute mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="absolute mt-2 w-56 origin-top-right bg-green-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {menuItem.sub_menus.length > 0 &&
                       menuItem.sub_menus.map((submenu, j) => (
                         <Link
@@ -138,7 +138,7 @@ export default function Header() {
                               ? `/page/${submenu.slug}`
                               : `/pages/${submenu.type}`
                           }
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block px-4 py-2 text-sm text-white hover:bg-green-800"
                         >
                           {submenu.title}
                         </Link>
@@ -160,7 +160,7 @@ export default function Header() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <div className="md:hidden fixed inset-0 bg-gradient-to-r from-lime-500 via-green-400 to-green-600 z-40 h-screen overflow-y-auto">
+        <div className="md:hidden fixed inset-0 bg-gradient-to-r from-lime-500 via-green-400 to-green-600 z-50 h-screen overflow-y-auto">
           {/* Close Button */}
           <button
             onClick={() => setIsOpen(false)}
