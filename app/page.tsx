@@ -23,7 +23,6 @@ export default function Home() {
       handleNext()
     }, slideInterval)
 
-    console.log(slideInterval)
     return () => clearInterval(interval)
   }, [currentSlide, slides.length])
 
@@ -71,15 +70,12 @@ export default function Home() {
 
             {/* Slide container */}
             <div
-              className="flex transition-transform duration-700 ease-in-out"
+              className="flex h-[500px] transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {slides.length > 0 &&
                 slides.map((slide, index) => (
-                  <div
-                    key={index}
-                    className="relative w-full h-[500px] flex-shrink-0"
-                  >
+                  <div key={index} className="relative w-full flex-shrink-0">
                     {/* Background image */}
                     <div className="absolute inset-0 w-full h-full -z-10">
                       <Image

@@ -95,15 +95,15 @@ export default async function AdminLayout({
           news={news}
         >
           <SupabaseListener serverAccessToken={session?.access_token} />
-          {!session && children}
-          {session && (
-            <Providers>
+          <Providers>
+            {!session && children}
+            {session && (
               <FilterProvider>
                 <Toaster />
                 {children}
               </FilterProvider>
-            </Providers>
-          )}
+            )}
+          </Providers>
         </SupabaseProvider>
       </body>
     </html>

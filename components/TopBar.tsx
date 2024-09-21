@@ -1,4 +1,3 @@
-import Notifications from '@/components/TopBars/Notifications'
 import UserDropdown from '@/components/TopBars/UserDropdown'
 import Link from 'next/link'
 
@@ -12,7 +11,7 @@ function TopBar() {
             Go to Website
           </Link>
         </div>
-        <Notifications darkMode={false} />
+        {/* <Notifications darkMode={false} /> */}
         <UserDropdown darkMode={false} />
       </div>
     </div>

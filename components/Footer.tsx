@@ -40,7 +40,6 @@ export default function Footer() {
         setError('Credentials provided is incorrect.')
         setSigningIn(false)
       } else {
-        router.refresh()
         router.push('/admin/pages')
       }
     } else {
@@ -58,7 +57,7 @@ export default function Footer() {
 
     setLoggedIn(false)
     router.refresh()
-    router.push('/')
+    router.push('/admin/pages')
   }
 
   useEffect(() => {
