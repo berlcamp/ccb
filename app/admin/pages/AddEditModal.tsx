@@ -334,7 +334,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                   </div>
                 </div>
               </div>
-              <div className="app__form_field_container">
+              {/* <div className="app__form_field_container">
                 <div className="w-full">
                   <div className="app__label_standard">Displayed Sidebar:</div>
                   <div>
@@ -355,7 +355,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                     </select>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="app__modal_footer">
                 <button type="submit" className="app__btn_green_sm">
