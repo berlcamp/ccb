@@ -3,27 +3,53 @@
 @tailwind utilities;
 
 h1 {
-  @apply text-4xl font-bold;
-}
-
-h2 {
-  @apply text-3xl font-bold;
-}
-
-h3 {
   @apply text-2xl font-bold;
 }
 
-h4 {
+h2 {
   @apply text-xl font-bold;
 }
 
-h5 {
+h3 {
   @apply text-lg font-bold;
+}
+
+h4 {
+  @apply text-base font-bold;
+}
+
+h5 {
+  @apply text-base font-bold;
 }
 
 h6 {
   @apply text-base font-bold;
+}
+
+.page-content ol,
+.page-content ul {
+  @apply ml-10;
+}
+.page-content ol li {
+  @apply list-decimal;
+}
+.page-content ul li {
+  @apply list-disc;
+}
+.page-content .ql-indent-1 {
+  @apply ml-14;
+}
+.page-content .ql-indent-2 {
+  @apply ml-16;
+}
+.page-content .ql-indent-3 {
+  @apply ml-20;
+}
+.page-content .ql-indent-4 {
+  @apply ml-24;
+}
+.page-content .ql-indent-5 {
+  @apply ml-28;
 }
 
 /* Additional styles for the arrow */

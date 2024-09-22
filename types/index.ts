@@ -99,6 +99,8 @@ export interface PagesFormTypes {
   is_deleted: boolean
   publish_date: string
   slug?: string
+  menu_id: string
+  menu: MenuTypes
 }
 
 export interface MenuTypes {

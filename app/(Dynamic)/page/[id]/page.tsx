@@ -45,6 +45,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                   {details.title}
                 </h1>
                 <div
+                  className="page-content"
                   dangerouslySetInnerHTML={{
                     __html: details.content
                   }}
