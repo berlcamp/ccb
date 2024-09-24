@@ -41,6 +41,7 @@ export default function Footer() {
         setSigningIn(false)
       } else {
         router.push('/admin/pages')
+        router.refresh()
       }
     } else {
       setError('This is account is currently inactive.')
@@ -56,8 +57,8 @@ export default function Footer() {
     }
 
     setLoggedIn(false)
+    router.push('/')
     router.refresh()
-    router.push('/admin/pages')
   }
 
   useEffect(() => {

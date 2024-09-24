@@ -56,19 +56,19 @@ const Page: React.FC = () => {
                   multiple={true}
                   type="settings"
                   users={users}
-                  title="Who can manage System Settings"
+                  title="Who can manage Website Settings"
                 />
                 <ChooseUsers
                   multiple={true}
                   type="page_creator"
                   users={users}
-                  title="Page Creators"
+                  title="Page Creators - Page creators can only create content but cannot publish them."
                 />
                 <ChooseUsers
                   multiple={true}
                   type="page_publishers"
                   users={users}
-                  title="Page Publishers"
+                  title="Page Publishers - Page publishers can both create and publish content."
                 />
               </>
             )}

@@ -8,7 +8,6 @@ import Avatar from 'react-avatar'
 
 // types
 import type { Employee } from '@/types'
-import { GrDocumentUser } from 'react-icons/gr'
 
 interface propTypes {
   darkMode?: boolean
@@ -55,12 +54,12 @@ const UserDropdown = ({ darkMode }: propTypes) => {
             <div className="py-1">
               <Menu.Item>
                 <div className="px-4 py-2">
-                  <div className="app__user_menu_items">
+                  {/* <div className="app__user_menu_items">
                     <GrDocumentUser className="w-5 h-5" />
                     <div className="text-sm font-semibold text-gray-700">
                       Account Details
                     </div>
-                  </div>
+                  </div> */}
                   <div className="py-2">
                     <hr />
                   </div>

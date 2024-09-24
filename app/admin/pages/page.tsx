@@ -49,7 +49,7 @@ const Page: React.FC = () => {
   const [filterKeyword, setFilterKeyword] = useState<string>('')
   const [filterType, setFilterType] = useState<string>('')
 
-  const { setToast } = useFilter()
+  const { setToast, hasAccess } = useFilter()
   const { supabase } = useSupabase()
 
   // Redux staff
@@ -298,32 +298,34 @@ const Page: React.FC = () => {
                                     <span>Edit</span>
                                   </div>
                                 </Menu.Item>
-                                {!item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, true)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Move to Trashed</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
-                                {item.is_deleted && (
-                                  <Menu.Item>
-                                    <div
-                                      onClick={() =>
-                                        handleDelete(item.id, false)
-                                      }
-                                      className="app__dropdown_item"
-                                    >
-                                      <TrashIcon className="w-4 h-4" />
-                                      <span>Delete Permanently</span>
-                                    </div>
-                                  </Menu.Item>
-                                )}
+                                {hasAccess('page_publishers') &&
+                                  !item.is_deleted && (
+                                    <Menu.Item>
+                                      <div
+                                        onClick={() =>
+                                          handleDelete(item.id, true)
+                                        }
+                                        className="app__dropdown_item"
+                                      >
+                                        <TrashIcon className="w-4 h-4" />
+                                        <span>Move to Trashed</span>
+                                      </div>
+                                    </Menu.Item>
+                                  )}
+                                {hasAccess('page_publishers') &&
+                                  item.is_deleted && (
+                                    <Menu.Item>
+                                      <div
+                                        onClick={() =>
+                                          handleDelete(item.id, false)
+                                        }
+                                        className="app__dropdown_item"
+                                      >
+                                        <TrashIcon className="w-4 h-4" />
+                                        <span>Delete Permanently</span>
+                                      </div>
+                                    </Menu.Item>
+                                  )}
                               </div>
                             </Menu.Items>
                           </Transition>
@@ -358,7 +360,9 @@ const Page: React.FC = () => {
                       <td className="app__td">
                         {item.is_deleted ? (
                           <CustomButton
-                            containerStyles="app__btn_blue"
+                            containerStyles={`app__btn_blue ${
+                              !hasAccess('page_publishers') && 'hidden'
+                            }`}
                             title="Restore"
                             btnType="button"
                             handleClick={() => handleRestore(item.id)}
@@ -367,7 +371,9 @@ const Page: React.FC = () => {
                           <>
                             {item.status === 'draft' && (
                               <CustomButton
-                                containerStyles="app__btn_green_xs"
+                                containerStyles={`app__btn_green_xs ${
+                                  !hasAccess('page_publishers') && 'hidden'
+                                }`}
                                 title="Publish"
                                 btnType="button"
                                 handleClick={() => handlePublish(item.id)}
@@ -376,7 +382,9 @@ const Page: React.FC = () => {
                             {item.status === 'published' && (
                               <div className="flex space-x-2">
                                 <CustomButton
-                                  containerStyles="app__btn_red_xs"
+                                  containerStyles={`app__btn_red_xs ${
+                                    !hasAccess('page_publishers') && 'hidden'
+                                  }`}
                                   title="Unpublish"
                                   btnType="button"
                                   handleClick={() => handleUnpublish(item.id)}
