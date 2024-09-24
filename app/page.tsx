@@ -75,7 +75,7 @@ export default function Home() {
             </li>
             <li className="my-4">
               <Link
-                href="/#"
+                href="/pages/facilities?mref=2"
                 className="hover:underline text-xl uppercase font-light"
               >
                 <div className="flex items-center space-x-4">
