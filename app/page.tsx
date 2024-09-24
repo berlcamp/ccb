@@ -60,7 +60,7 @@ export default function Home() {
       {/* Main Content Wrapper */}
       <main className="flex-grow relative">
         {/* Floating box (static, outside of the slider) */}
-        <div className="absolute top-[480px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-8 py-4 rounded-md shadow-lg z-30">
+        <div className="hidden md:block absolute top-[480px] left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-8 py-4 rounded-md shadow-lg z-30">
           <ul className="md:flex space-x-20 items-center justify-center text-center">
             <li className="my-4">
               <Link

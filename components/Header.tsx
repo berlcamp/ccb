@@ -114,7 +114,7 @@ export default function Header() {
                 onMouseLeave={() => setHoveredMenu(null)}
                 className="relative"
               >
-                <button className="inline-flex justify-center w-full text-white hover:text-blue-500 transition duration-300">
+                <button className="inline-flex text-sm font-medium uppercase justify-center w-full text-white hover:text-blue-500 transition duration-300">
                   {menuItem.title}
                 </button>
 
@@ -176,7 +176,9 @@ export default function Header() {
             {dynamicMenu.length > 0 &&
               dynamicMenu.map((menuItem, i) => (
                 <div key={i} className="text-gray-200 text-lg space-y-2">
-                  <p className="font-bold">{menuItem.title}</p>
+                  <p className="text-sm font-bold uppercase">
+                    {menuItem.title}
+                  </p>
                   {menuItem.sub_menus.length > 0 &&
                     menuItem.sub_menus.map((submenu, j) => (
                       <Link

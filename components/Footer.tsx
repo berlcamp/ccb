@@ -79,7 +79,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Links */}
-          <div className="flex flex-col md:flex-row space-y-4 md:space-x-8 md:space-y-0 mb-6 md:mb-0">
+          <div className="flex flex-col md:flex-row space-y-4 md:space-x-8 md:space-y-0 mb-6 md:mb-0 text-sm">
             <a
               href="/page/10"
               className="hover:text-blue-500 transition duration-300"

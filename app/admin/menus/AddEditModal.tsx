@@ -427,13 +427,20 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                                 </div>
                               </td>
                               <td className="app__td">
-                                <CustomButton
-                                  btnType="button"
-                                  isDisabled={saving}
-                                  title="Remove"
-                                  handleClick={() => handleRemoveSubmenu(item)}
-                                  containerStyles="app__btn_red_xs"
-                                />
+                                {/* Disable remove on hard code pages */}
+                                {![6918, 630, 8585, 4913, 10909].includes(
+                                  item.ref
+                                ) && (
+                                  <CustomButton
+                                    btnType="button"
+                                    isDisabled={saving}
+                                    title="Remove"
+                                    handleClick={() =>
+                                      handleRemoveSubmenu(item)
+                                    }
+                                    containerStyles="app__btn_red_xs"
+                                  />
+                                )}
                               </td>
                             </tr>
                           ))}

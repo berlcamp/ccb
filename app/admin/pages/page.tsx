@@ -308,7 +308,7 @@ const Page: React.FC = () => {
                                         className="app__dropdown_item"
                                       >
                                         <TrashIcon className="w-4 h-4" />
-                                        <span>Move to Trashed</span>
+                                        <span>Move to Trash</span>
                                       </div>
                                     </Menu.Item>
                                   )}
