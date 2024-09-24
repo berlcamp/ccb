@@ -16,7 +16,6 @@ export default function PageSidebar() {
   let submenu: SubmenuTypes[] = []
   if (mref) {
     submenu = menu.filter((m) => m.id.toString() === mref)[0].sub_menus
-    console.log('submenu', submenu)
   }
 
   return (
@@ -31,6 +30,8 @@ export default function PageSidebar() {
                     pathname:
                       submenu.type === 'static-page'
                         ? `/page/${submenu.slug}`
+                        : submenu.type === 'custom-url'
+                        ? `${submenu.slug}`
                         : `/pages/${submenu.type}`,
                     query: destinationQuery
                   }}

@@ -78,7 +78,9 @@ const BoardOfTrustees = () => {
                       height={100}
                     />
                     <div className="font-bold">{mem.name}</div>
-                    <div className="font-light italic">{mem.position}</div>
+                    <div className="font-light italic w-32 text-sm">
+                      {mem.position}
+                    </div>
                   </div>
                   {/* Show div on hover (group-hover) or when clicked (activeMember === i) */}
                   <div
