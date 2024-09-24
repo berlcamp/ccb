@@ -71,7 +71,7 @@ const BoardOfTrustees = () => {
                       height={100}
                     />
                     <div className="font-bold">{mem.name}</div>
-                    <div className="font-light italic w-32 text-sm">
+                    <div className="font-light italic w-32 text-sm text-center">
                       {mem.position}
                     </div>
                   </div>
