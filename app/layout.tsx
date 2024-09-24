@@ -33,6 +33,7 @@ export default async function AdminLayout({
   let sysAccess: UserAccessTypes[] | null = []
   let sysUsers: Employee[] | null = []
   let news: any[] | null = []
+  let menu: any[] | null = []
 
   if (session) {
     try {
@@ -85,6 +86,18 @@ export default async function AdminLayout({
     return 'Something went wrong, please reload the page.'
   }
 
+  try {
+    const { data: menuData, error } = await supabase.from('ccb_menu').select()
+
+    if (error) {
+      void logError('root layout menu access', 'ccb_menu', '', error.message)
+      throw new Error(error.message)
+    }
+    menu = menuData
+  } catch (err) {
+    return 'Something went wrong, please reload the page.'
+  }
+
   return (
     <html lang="en">
       <body className="relative bg-gradient-to-r from-lime-500 via-green-400 to-green-600">
@@ -93,6 +106,7 @@ export default async function AdminLayout({
           session={session}
           systemUsers={sysUsers}
           news={news}
+          menu={menu}
         >
           <SupabaseListener serverAccessToken={session?.access_token} />
           <Providers>

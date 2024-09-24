@@ -10,13 +10,14 @@ export default function SupabaseProvider({
   session,
   systemAccess,
   systemUsers,
-  news
+  news,
+  menu
 }) {
   const [supabase] = useState(() => createBrowserClient())
 
   return (
     <Context.Provider
-      value={{ supabase, session, systemAccess, systemUsers, news }}
+      value={{ supabase, session, systemAccess, systemUsers, news, menu }}
     >
       <>{children}</>
     </Context.Provider>

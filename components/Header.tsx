@@ -74,7 +74,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-30 bg-black bg-opacity-50 backdrop-blur-md shadow-md">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-50 backdrop-blur-md shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1 flex items-center justify-between">
         {/* Logo and Title */}
         <div className="flex items-center space-x-4">
@@ -133,11 +133,13 @@ export default function Header() {
                       menuItem.sub_menus.map((submenu, j) => (
                         <Link
                           key={j}
-                          href={
-                            submenu.type === 'static-page'
-                              ? `/page/${submenu.slug}`
-                              : `/pages/${submenu.type}`
-                          }
+                          href={{
+                            pathname:
+                              submenu.type === 'static-page'
+                                ? `/page/${submenu.slug}`
+                                : `/pages/${submenu.type}`,
+                            query: { mref: menuItem.id }
+                          }}
                           className="block px-4 py-2 text-sm text-white hover:bg-green-800"
                         >
                           {submenu.title}
@@ -177,11 +179,13 @@ export default function Header() {
                     menuItem.sub_menus.map((submenu, j) => (
                       <Link
                         key={j}
-                        href={
-                          submenu.type === 'static-page'
-                            ? `/page/${submenu.slug}`
-                            : `/pages/${submenu.type}`
-                        }
+                        href={{
+                          pathname:
+                            submenu.type === 'static-page'
+                              ? `/page/${submenu.slug}`
+                              : `/pages/${submenu.type}`,
+                          query: { mref: menuItem.id }
+                        }}
                         className="block text-sm text-white hover:text-gray-200 transition duration-300"
                         onClick={() => setIsOpen(false)}
                       >

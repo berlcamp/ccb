@@ -52,6 +52,16 @@ const SettingsSideBar = () => {
             </span>
           </Link>
         </li>
+        <li>
+          <Link
+            href="/admin/images"
+            className={`app__menu_link ${
+              currentRoute === '/admin/images' ? 'app_menu_link_active' : ''
+            }`}
+          >
+            <span className="flex-1 ml-3 whitespace-nowrap">Image Library</span>
+          </Link>
+        </li>
       </ul>
       {(hasAccess('settings') || superAdmins.includes(session.user.email)) && (
         <ul className="pt-8 mt-4 space-y-2 border-t border-gray-700">

@@ -26,32 +26,43 @@ h6 {
   @apply text-base font-bold;
 }
 
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: '\201C''\201D''\2018''\2019';
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+
+.page-content p {
+  @apply py-2;
+}
+
 .page-content ol,
-.page-content ul {
+.tiptap ol,
+.page-content ul,
+.tiptap ul {
   @apply ml-10;
 }
+.tiptap ol li,
 .page-content ol li {
   @apply list-decimal;
 }
+.tiptap ul li,
 .page-content ul li {
   @apply list-disc;
 }
-.page-content .ql-indent-1 {
-  @apply ml-14;
-}
-.page-content .ql-indent-2 {
-  @apply ml-16;
-}
-.page-content .ql-indent-3 {
-  @apply ml-20;
-}
-.page-content .ql-indent-4 {
-  @apply ml-24;
-}
-.page-content .ql-indent-5 {
-  @apply ml-28;
-}
-
 /* Additional styles for the arrow */
 .app__main {
   @apply lg:ml-64 mt-20 pb-14;

@@ -270,7 +270,33 @@ export async function fetchSlider(perPageCount: number, rangeFrom: number) {
     }
     return { data, count }
   } catch (error) {
-    console.error('fetch menu error', error)
+    console.error('fetch slider error', error)
+    return { data: [], count: 0 }
+  }
+}
+
+export async function fetchImages(perPageCount: number, rangeFrom: number) {
+  try {
+    let query = supabase.from('ccb_images').select('*', { count: 'exact' })
+
+    // Per Page from context
+    const from = rangeFrom
+    const to = from + (perPageCount - 1)
+
+    // Per Page from context
+    query = query.range(from, to)
+
+    // Order By
+    query = query.order('id', { ascending: true })
+
+    const { data, error, count } = await query
+
+    if (error) {
+      throw new Error(error.message)
+    }
+    return { data, count }
+  } catch (error) {
+    console.error('fetch imags error', error)
     return { data: [], count: 0 }
   }
 }

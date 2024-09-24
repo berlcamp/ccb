@@ -10,6 +10,7 @@ import { fetchDynamicPages } from '@/utils/fetchApi'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -18,6 +19,11 @@ export default function Pages({ params }: { params: { slug: string } }) {
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState<PagesFormTypes[]>([])
   const [perPageCount, setPerPageCount] = useState<number>(10)
+
+  const searchParams = useSearchParams()
+  const mref = searchParams.get('mref') // Get the "ref" query parameter
+
+  const destinationQuery = mref ? { mref } : {} // Add "ref" if it exists
 
   // Redux staff
   const globallist = useSelector((state: any) => state.list.value)
@@ -104,7 +110,12 @@ export default function Pages({ params }: { params: { slug: string } }) {
                     className="mb-8 p-4 border border-gray-200 rounded-md"
                   >
                     {/* Title and Date */}
-                    <Link href={`/page/${page.id}`}>
+                    <Link
+                      href={{
+                        pathname: `/page/${page.id}`,
+                        query: destinationQuery
+                      }}
+                    >
                       <h2 className="text-2xl font-semibold mb-2">
                         {page.title}
                       </h2>

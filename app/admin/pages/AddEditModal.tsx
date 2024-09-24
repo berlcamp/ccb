@@ -1,29 +1,19 @@
+'use client'
 import { useFilter } from '@/context/FilterContext'
 import { useSupabase } from '@/context/SupabaseProvider'
-import { fetchMenu, logError } from '@/utils/fetchApi'
+import { logError } from '@/utils/fetchApi'
 
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-// @ts-ignore
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-// @ts-ignore
-import beautify from 'js-beautify'
-// @ts-ignore
-import Prism from 'prismjs'
-import 'prismjs/components/prism-markup' // For HTML highlighting
-import 'prismjs/themes/prism.css' // You can choose a theme for Prism (optional)
-import Editor from 'react-simple-code-editor'
 
 // Types
-import type { MenuTypes, PagesFormTypes, PageSlugsTypes } from '@/types'
+import type { PagesFormTypes, PageSlugsTypes } from '@/types'
 
 // Redux imports
-import { OneColLayoutLoading } from '@/components'
+import Tiptap from '@/components/Tiptap'
 import { pageTypes } from '@/constants'
 import { updateList } from '@/GlobalRedux/Features/listSlice'
 import { updateResultCounter } from '@/GlobalRedux/Features/resultsCounterSlice'
-import { Button } from '@headlessui/react'
 import { useDispatch, useSelector } from 'react-redux'
 
 interface ModalProps {
@@ -38,9 +28,6 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
   const [loadingSidebar, setLoadingSidebar] = useState(true)
 
   const [content, setContent] = useState(editData ? editData.content : '')
-  const [isCodeView, setIsCodeView] = useState(false)
-
-  const [menus, setMenus] = useState<MenuTypes[] | []>([])
 
   // Redux staff
   const globallist = useSelector((state: any) => state.list.value)
@@ -77,7 +64,6 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
       publish_date: formdata.publish_date ? formdata.publish_date : null,
       content: content,
       is_deleted: false,
-      menu_id: formdata.menu_id,
       status: 'draft'
     }
 
@@ -145,8 +131,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
       thumbnail_photo: getImg(content),
       type: formdata.type,
       publish_date: formdata.publish_date ? formdata.publish_date : null,
-      content: content,
-      menu_id: formdata.menu_id
+      content: content
     }
 
     try {
@@ -194,20 +179,9 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
     }
   }
 
-  const toggleView = () => {
-    if (!isCodeView) {
-      const beautifiedContent = beautify.html(content, {
-        indent_size: 2,
-        space_in_empty_paren: true
-      })
-      setContent(beautifiedContent)
-    }
-    setIsCodeView(!isCodeView)
+  const handleContentChange = (reason: any) => {
+    setContent(reason)
   }
-
-  // Function to format code with Prism
-  const highlightWithPrism = (code: string) =>
-    Prism.highlight(code, Prism.languages.markup, 'markup')
 
   const createExcerpt = (content: string, length: number) => {
     const strippedContent = content.replace(/<[^>]*>/g, '') // Remove HTML tags
@@ -236,14 +210,8 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
       title: editData ? editData.title : '',
       type: editData ? editData.type : '',
       sidebar_type: editData ? editData.sidebar_type : '',
-      publish_date: editData ? editData.publish_date : '',
-      menu_id: editData ? editData.menu_id : ''
+      publish_date: editData ? editData.publish_date : ''
     })
-    ;(async () => {
-      const result = await fetchMenu(99, 0)
-      setMenus(result.data)
-      setLoadingSidebar(false)
-    })()
   }, [editData, reset])
 
   return (
@@ -321,97 +289,12 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                 <div className="w-full">
                   <div className="app__label_standard">Content:</div>
                   <div>
-                    <div className="flex justify-end mb-2">
-                      <Button onClick={toggleView} className="app__btn_blue">
-                        {isCodeView ? 'Visual View' : 'Code View'}
-                      </Button>
-                    </div>
-                    {!isCodeView ? (
-                      <ReactQuill
-                        theme="snow"
-                        modules={{
-                          toolbar: [
-                            [{ header: [1, 2, false] }],
-                            [
-                              'bold',
-                              'italic',
-                              'underline',
-                              'strike',
-                              'blockquote'
-                            ],
-                            [
-                              { list: 'ordered' },
-                              { list: 'bullet' },
-                              { indent: '-1' },
-                              { indent: '+1' }
-                            ],
-                            [
-                              { align: '' },
-                              { align: 'center' },
-                              { align: 'right' },
-                              { align: 'justify' }
-                            ],
-                            ['link', 'image'],
-                            ['clean']
-                          ]
-                        }}
-                        formats={[
-                          'header',
-                          'bold',
-                          'italic',
-                          'underline',
-                          'strike',
-                          'blockquote',
-                          'list',
-                          'align',
-                          'bullet',
-                          'indent',
-                          'link',
-                          'image'
-                        ]}
-                        value={content}
-                        placeholder="Write your content here.."
-                        onChange={setContent}
-                      />
-                    ) : (
-                      <div className="border border-gray-300 rounded shadow">
-                        <Editor
-                          value={content}
-                          onValueChange={(code) => setContent(code)}
-                          highlight={highlightWithPrism}
-                          padding={10}
-                          className="bg-gray-100 h-96 p-4 text-sm overflow-auto"
-                          style={{
-                            fontFamily: '"Fira code", "Fira Mono", monospace',
-                            fontSize: 14,
-                            whiteSpace: 'pre-wrap',
-                            wordWrap: 'break-word'
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="app__form_field_container">
-                <div className="w-full">
-                  <div className="app__label_standard">Displayed Sidebar:</div>
-                  <div>
-                    {loadingSidebar && <OneColLayoutLoading rows={1} />}
-                    {!loadingSidebar && (
-                      <select
-                        {...register('menu_id', { required: true })}
-                        className="app__select_standard"
-                      >
-                        <option value="">None</option>
-                        {menus.length > 0 &&
-                          menus.map((item, i) => (
-                            <option key={i} value={item.id}>
-                              {item.title} Sidebar
-                            </option>
-                          ))}
-                      </select>
-                    )}
+                    <Tiptap
+                      content={content}
+                      onChange={(newContent: string) =>
+                        handleContentChange(newContent)
+                      }
+                    />
                   </div>
                 </div>
               </div>
