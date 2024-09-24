@@ -129,3 +129,32 @@ export interface SliderTypes {
   status: string
   is_deleted: boolean
 }
+
+export interface StudentFormData {
+  id?: string
+  lastname: string
+  firstname: string
+  middlename: string
+  course: string
+  year: string
+  birthday?: string
+  place_of_birth?: string
+  civil_status?: string
+  gender?: string
+  email?: string
+  contact_number?: string
+  home_address?: string
+  province?: string
+  city_town?: string
+  zipcode?: string
+  current_address?: string
+  father_fullname?: string
+  mother_fullname?: string
+  colleges: {
+    college_name: string
+    college_address: string
+    year_graduated: number
+  }[]
+  organizations: { org_name: string; position: string }[]
+  agree_terms?: boolean
+}

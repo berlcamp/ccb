@@ -137,6 +137,8 @@ export default function Header() {
                             pathname:
                               submenu.type === 'static-page'
                                 ? `/page/${submenu.slug}`
+                                : submenu.type === 'custom-url'
+                                ? `${submenu.slug}`
                                 : `/pages/${submenu.type}`,
                             query: { mref: menuItem.id }
                           }}

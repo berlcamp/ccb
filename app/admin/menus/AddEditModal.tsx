@@ -310,6 +310,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                                   </option>
                                 )
                               )}
+                              <option value="custom-url">Custom URL</option>
                             </select>
                             {submenuType === 'static-page' && (
                               <select
@@ -326,6 +327,14 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                                   )
                                 )}
                               </select>
+                            )}
+                            {submenuType === 'custom-url' && (
+                              <input
+                                value={submenuSlug}
+                                placeholder="URL"
+                                onChange={(e) => setSubmenuSlug(e.target.value)}
+                                className="app__input_standard"
+                              />
                             )}
                           </div>
                         </div>
@@ -383,6 +392,9 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                                         </option>
                                       )
                                     )}
+                                    <option value="custom-url">
+                                      Custom URL
+                                    </option>
                                   </select>
                                   {item.type === 'static-page' && (
                                     <select
@@ -401,6 +413,16 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                                         )
                                       )}
                                     </select>
+                                  )}
+                                  {item.type === 'custom-url' && (
+                                    <input
+                                      value={item.slug}
+                                      placeholder="URL"
+                                      onChange={(e) =>
+                                        handleSlugChange(index, e.target.value)
+                                      }
+                                      className="app__input_standard"
+                                    />
                                   )}
                                 </div>
                               </td>

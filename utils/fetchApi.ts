@@ -2,7 +2,7 @@ import { fullTextQuery } from '@/utils/text-helper'
 import { createBrowserClient } from '@supabase/ssr'
 
 // types
-import type { AccountTypes, Employee } from '@/types'
+import type { AccountTypes } from '@/types'
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const supabase = createBrowserClient(
@@ -62,8 +62,6 @@ export async function fetchPages(
 export async function fetchRegistrations(
   filters: {
     filterKeyword?: string
-    filterSchool?: string
-    filterOffice?: string
   },
   perPageCount: number,
   rangeFrom: number
@@ -90,13 +88,11 @@ export async function fetchRegistrations(
     // Order By
     query = query.order('id', { ascending: false })
 
-    const { data: userData, error, count } = await query
+    const { data, error, count } = await query
 
     if (error) {
       throw new Error(error.message)
     }
-
-    const data: Employee[] = userData
 
     return { data, count }
   } catch (error) {
