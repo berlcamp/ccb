@@ -60,12 +60,6 @@ const Page: React.FC = () => {
                 />
                 <ChooseUsers
                   multiple={true}
-                  type="page_creator"
-                  users={users}
-                  title="Page Creators - Page creators can only create content but cannot publish them."
-                />
-                <ChooseUsers
-                  multiple={true}
                   type="page_publishers"
                   users={users}
                   title="Page Publishers - Page publishers can both create and publish content."

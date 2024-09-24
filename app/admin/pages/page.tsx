@@ -394,7 +394,7 @@ const Page: React.FC = () => {
                                   href={
                                     item.type === 'static-page'
                                       ? `/page/${item.id}`
-                                      : `/pages/${item.slug}`
+                                      : `/pages/${item.type}`
                                   }
                                   className="app__btn_blue_xs"
                                 >

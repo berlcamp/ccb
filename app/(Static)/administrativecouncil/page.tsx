@@ -9,44 +9,37 @@ const BoardOfTrustees = () => {
   const members = [
     {
       name: 'John Doe',
-      position: 'Chairman',
+      position: 'Special Assistant to the President',
       email: 'john.doe@example.com',
       quote: 'Leading with integrity and vision.',
       image: '/avatar.png' // Update with actual image path
     },
     {
       name: 'Jane Smith',
-      position: 'Vice Chairman',
+      position: 'Chief Accountant',
       email: 'jane.smith@example.com',
       quote: 'Empowering future leaders.',
       image: '/avatar.png'
     },
     {
       name: 'Emily Johnson',
-      position: 'Secretary',
+      position: 'Human Resource and Development',
       email: 'emily.johnson@example.com',
       quote: 'Organization is the key to success.',
       image: '/avatar.png'
     },
     {
       name: 'Michael Brown',
-      position: 'Treasurer',
+      position: 'Assistant Risk Manager',
       email: 'michael.brown@example.com',
       quote: 'Balancing the books for a brighter future.',
       image: '/avatar.png'
     },
     {
       name: 'Jessica Taylor',
-      position: 'Member',
+      position: 'Management Information Systems',
       email: 'jessica.taylor@example.com',
       quote: 'Together, we can make a difference.',
-      image: '/avatar.png'
-    },
-    {
-      name: 'David Wilson',
-      position: 'Member',
-      email: 'david.wilson@example.com',
-      quote: 'Innovating for the future of education.',
       image: '/avatar.png'
     }
   ]
@@ -60,7 +53,7 @@ const BoardOfTrustees = () => {
           <div className="md:w-2/3">
             <div className="flex items-center justify-center">
               <div className="border border-green-700 rounded-lg px-4 py-1 text-green-800 text-lg">
-                Board of Trustees
+                Administrative Council
               </div>
             </div>
             <div className="space-y-20">
