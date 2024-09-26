@@ -130,6 +130,14 @@ export interface SliderTypes {
   is_deleted: boolean
 }
 
+export interface AdministrationTypes {
+  id: string
+  name: string
+  position: string
+  type: string
+  image_url: string
+}
+
 export interface StudentFormData {
   id?: string
   lastname: string

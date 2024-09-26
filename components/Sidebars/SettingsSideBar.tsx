@@ -54,6 +54,7 @@ const SettingsSideBar = () => {
                 </span>
               </Link>
             </li>
+
             <li>
               <Link
                 href="/admin/images"
@@ -63,6 +64,20 @@ const SettingsSideBar = () => {
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">
                   Image Library
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/administration"
+                className={`app__menu_link ${
+                  currentRoute === '/admin/administration'
+                    ? 'app_menu_link_active'
+                    : ''
+                }`}
+              >
+                <span className="flex-1 ml-3 whitespace-nowrap">
+                  Administration Pages
                 </span>
               </Link>
             </li>

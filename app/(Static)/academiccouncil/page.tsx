@@ -3,54 +3,20 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import PageSidebar from '@/components/PageSidebar'
+import { AdministrationTypes } from '@/types'
+import { fetchAdministration } from '@/utils/fetchApi'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 const BoardOfTrustees = () => {
-  const members = [
-    {
-      name: 'John Doe',
-      position: 'Vice President for Academic Affairs',
-      email: 'john.doe@example.com',
-      quote: 'Leading with integrity and vision.',
-      image: '/avatar.png' // Update with actual image path
-    },
-    {
-      name: 'Jane Smith',
-      position: 'Director for Strategic Planning',
-      email: 'jane.smith@example.com',
-      quote: 'Empowering future leaders.',
-      image: '/avatar.png'
-    },
-    {
-      name: 'Emily Johnson',
-      position: 'School Registrar',
-      email: 'emily.johnson@example.com',
-      quote: 'Organization is the key to success.',
-      image: '/avatar.png'
-    },
-    {
-      name: 'Michael Brown',
-      position: 'Director for Curriculum and Development',
-      email: 'michael.brown@example.com',
-      quote: 'Balancing the books for a brighter future.',
-      image: '/avatar.png'
-    },
-    {
-      name: 'Jessica Taylor',
-      position: 'College of Arts & Sciences',
-      email: 'jessica.taylor@example.com',
-      quote: 'Together, we can make a difference.',
-      image: '/avatar.png'
-    },
-    {
-      name: 'David Wilson',
-      position: 'College of Criminology',
-      email: 'david.wilson@example.com',
-      quote: 'Innovating for the future of education.',
-      image: '/avatar.png'
-    }
-  ]
+  const [members, setMembers] = useState<AdministrationTypes[] | []>([])
 
+  useEffect(() => {
+    ;(async () => {
+      const result = await fetchAdministration('academic-council', 99, 0)
+      setMembers(result.data)
+    })()
+  }, [])
   return (
     <div className="flex flex-col min-h-screen pt-[74px]">
       <Header />
@@ -64,36 +30,41 @@ const BoardOfTrustees = () => {
               </div>
             </div>
             <div className="space-y-20">
-              {members.map((mem: any, i: number) => (
-                <div
-                  key={i}
-                  className="inline-flex mr-10 md:mr-20 relative group"
-                >
-                  <div className="flex flex-col items-center justify-center cursor-pointer">
-                    <Image
-                      src="/avatar.png"
-                      alt=""
-                      className="rounded-full aspect-square object-cover"
-                      width={100}
-                      height={100}
-                    />
-                    <div className="font-bold">{mem.name}</div>
-                    <div className="font-light italic w-32 text-sm text-center">
-                      {mem.position}
-                    </div>
-                  </div>
-                  {/* Show div on hover (group-hover) or when clicked (activeMember === i) */}
+              {members.length > 0 &&
+                members.map((mem, i: number) => (
                   <div
-                    className={`absolute z-30 w-[400px] bottom-0 left-0 bg-white p-4 border rounded-md transition-opacity duration-300 opacity-0 
-              group-hover:opacity-100`}
+                    key={i}
+                    className="inline-flex mr-10 md:mr-20 relative group"
                   >
-                    <div className="text-sm">
-                      Fullname: <span className="font-bold">{mem.name}</span>
+                    <div className="flex flex-col items-center justify-center cursor-pointer">
+                      <Image
+                        src={
+                          mem.image_url
+                            ? `https://nuhirhfevxoonendpfsm.supabase.co/storage/v1/object/public/${mem.image_url}`
+                            : '/avatar.png'
+                        }
+                        alt=""
+                        className="rounded-full aspect-square object-cover"
+                        width={100}
+                        height={100}
+                      />
+                      <div className="font-bold">{mem.name}</div>
+                      <div className="font-light italic w-32 text-sm text-center">
+                        {mem.position}
+                      </div>
                     </div>
-                    <div className="text-sm">Position: {mem.position}</div>
+                    {/* Show div on hover (group-hover) or when clicked (activeMember === i) */}
+                    <div
+                      className={`absolute z-30 w-[400px] bottom-0 left-0 bg-white p-4 border rounded-md transition-opacity duration-300 opacity-0 
+              group-hover:opacity-100`}
+                    >
+                      <div className="text-sm">
+                        Fullname: <span className="font-bold">{mem.name}</span>
+                      </div>
+                      <div className="text-sm">Position: {mem.position}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
