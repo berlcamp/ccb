@@ -1,13 +1,17 @@
 'use client'
 import { useSupabase } from '@/context/SupabaseProvider'
-import { MenuTypes, SubmenuTypes } from '@/types'
+import { AdministrationTypes, MenuTypes, SubmenuTypes } from '@/types'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import SidebarNews from './SidebarNews'
 
-export default function PageSidebar() {
+interface PropTypes {
+  sidebarItem?: AdministrationTypes | null
+}
+
+export default function PageSidebar({ sidebarItem = null }: PropTypes) {
   const searchParams = useSearchParams()
   const mref = searchParams.get('mref') // Get the "mref" query parameter
   const destinationQuery = mref ? { mref } : {} // Add "mref" if it exists
@@ -21,16 +25,18 @@ export default function PageSidebar() {
 
   return (
     <div className="md:w-1/3 border p-4 mt-10 md:mt-0">
-      {mref && mref === '3' && (
+      {mref && mref === '3' && sidebarItem && (
         <div className="flex flex-col items-center justify-center mb-8">
           <Image
-            src="/avatar.png"
+            src={`https://nuhirhfevxoonendpfsm.supabase.co/storage/v1/object/public/${sidebarItem.image_url}`}
             alt="CCB President"
             width={180}
             height={180}
           />
-          <div className="font-bold">John Doe</div>
-          <div className="font-light italic text-sm">College President</div>
+          <div className="font-bold">{sidebarItem.name}</div>
+          <div className="font-light italic text-sm">
+            {sidebarItem.position}
+          </div>
         </div>
       )}
       {submenu.length > 0 && (

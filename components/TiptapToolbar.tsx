@@ -3,6 +3,10 @@
 import { LinkIcon } from '@heroicons/react/20/solid'
 import { type Editor } from '@tiptap/react'
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code,
   Heading2,
@@ -105,6 +109,65 @@ const TipTapToolbar = ({ editor, content }: Props) => {
           }
         >
           <Underline className="w-5 h-5" />
+        </button>
+        {/* Align Left */}
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            editor.chain().focus().setTextAlign('left').run()
+          }}
+          className={
+            editor.isActive({ textAlign: 'left' })
+              ? 'bg-sky-700 text-white p-2 rounded-lg'
+              : 'text-gray-400'
+          }
+        >
+          <AlignLeft className="w-5 h-5" />
+        </button>
+
+        {/* Align Center */}
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            editor.chain().focus().setTextAlign('center').run()
+          }}
+          className={
+            editor.isActive({ textAlign: 'center' })
+              ? 'bg-sky-700 text-white p-2 rounded-lg'
+              : 'text-gray-400'
+          }
+        >
+          <AlignCenter className="w-5 h-5" />
+        </button>
+
+        {/* Align Right */}
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            editor.chain().focus().setTextAlign('right').run()
+          }}
+          className={
+            editor.isActive({ textAlign: 'right' })
+              ? 'bg-sky-700 text-white p-2 rounded-lg'
+              : 'text-gray-400'
+          }
+        >
+          <AlignRight className="w-5 h-5" />
+        </button>
+
+        {/* Align Justify */}
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            editor.chain().focus().setTextAlign('justify').run()
+          }}
+          className={
+            editor.isActive({ textAlign: 'justify' })
+              ? 'bg-sky-700 text-white p-2 rounded-lg'
+              : 'text-gray-400'
+          }
+        >
+          <AlignJustify className="w-5 h-5" />
         </button>
         <button
           onClick={(e) => {

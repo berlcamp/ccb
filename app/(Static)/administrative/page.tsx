@@ -6,15 +6,44 @@ import PageSidebar from '@/components/PageSidebar'
 import { AdministrationTypes } from '@/types'
 import { fetchAdministration } from '@/utils/fetchApi'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-const BoardOfTrustees = () => {
+const Administrative = () => {
   const [members, setMembers] = useState<AdministrationTypes[] | []>([])
+  const [sidebarItem, setSidebarItem] = useState<AdministrationTypes | null>(
+    null
+  )
+
+  const searchParams = useSearchParams()
+  const page = searchParams.get('page') // Get the "page" query parameter
+
+  let title = ''
+  if (page === 'board-of-trustees') {
+    title = 'Board of Trustees'
+  }
+  if (page === 'executive-management') {
+    title = 'Executive Management'
+  }
+  if (page === 'academmic-council') {
+    title = 'Academic Council'
+  }
+  if (page === 'administrative-countil') {
+    title = 'Administrative Council'
+  }
 
   useEffect(() => {
     ;(async () => {
-      const result = await fetchAdministration('executive-management', 99, 0)
-      setMembers(result.data)
+      if (page) {
+        const result = await fetchAdministration(page, 99, 0)
+        setMembers(result.data)
+        const i: AdministrationTypes[] = result.data.filter(
+          (item: AdministrationTypes) => item.on_sidebar === true
+        )
+        if (i.length > 0) {
+          setSidebarItem(i[0])
+        }
+      }
     })()
   }, [])
   return (
@@ -26,7 +55,7 @@ const BoardOfTrustees = () => {
           <div className="md:w-2/3">
             <div className="flex items-center justify-center">
               <div className="border border-green-700 rounded-lg px-4 py-1 text-green-800 text-lg">
-                Executive Management
+                {title}
               </div>
             </div>
             <div className="space-y-20">
@@ -68,7 +97,7 @@ const BoardOfTrustees = () => {
             </div>
           </div>
 
-          <PageSidebar />
+          <PageSidebar sidebarItem={sidebarItem} />
         </div>
       </div>
 
@@ -77,4 +106,4 @@ const BoardOfTrustees = () => {
   )
 }
 
-export default BoardOfTrustees
+export default Administrative

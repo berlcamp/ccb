@@ -2,6 +2,7 @@
 
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
+import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -23,13 +24,16 @@ const Tiptap = ({ onChange, content }: any) => {
         openOnClick: false,
         autolink: true,
         defaultProtocol: 'https'
+      }),
+      TextAlign.configure({
+        types: ['heading', 'paragraph'] // Ensure that text alignment is applied to these types
       })
     ],
     content,
     editorProps: {
       attributes: {
         class:
-          'flex flex-col px-4 py-3 justify-start border-b border-r border-l border-gray-700 text-gray-800 items-start w-full gap-3 font-medium text-[16px] pt-4 rounded-bl-md rounded-br-md outline-none'
+          'px-4 py-3 border-b border-r border-l border-gray-700 text-gray-800 items-start w-full gap-3 font-medium text-[16px] pt-4 rounded-bl-md rounded-br-md outline-none'
       }
     },
     onUpdate: ({ editor }) => {

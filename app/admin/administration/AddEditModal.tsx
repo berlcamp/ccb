@@ -80,7 +80,8 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
     const newData = {
       name: formdata.name,
       position: formdata.position,
-      type: formdata.type
+      type: formdata.type,
+      on_sidebar: formdata.on_sidebar
     }
 
     let insertId: string
@@ -187,7 +188,8 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
     const newData = {
       name: formdata.name,
       position: formdata.position,
-      type: formdata.type
+      type: formdata.type,
+      on_sidebar: formdata.on_sidebar
     }
 
     const insertId = editData.id
@@ -213,7 +215,7 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
         throw new Error(error.message)
       }
 
-      let imagePath = ''
+      let imagePath = editData.image_url
 
       if (image) {
         // delete the existing image on supabase storage
@@ -297,7 +299,8 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
     reset({
       type: editData ? editData.type : '',
       name: editData ? editData.name : '',
-      position: editData ? editData.position : ''
+      position: editData ? editData.position : '',
+      on_sidebar: editData ? editData.on_sidebar : false
     })
   }, [editData, reset])
 
@@ -375,6 +378,22 @@ const AddEditModal = ({ hideModal, editData }: ModalProps) => {
                       </div>
                     )}
                   </div>
+                </div>
+              </div>
+              <div className="app__form_field_container">
+                <div className="flex items-center">
+                  <input
+                    id="disp_sidebar"
+                    type="checkbox"
+                    {...register('on_sidebar')}
+                    className="mr-2"
+                  />
+                  <label
+                    htmlFor="disp_sidebar"
+                    className="text-sm text-gray-700 font-medium"
+                  >
+                    Display On Sidebar
+                  </label>
                 </div>
               </div>
               <div className="app__form_field_container">

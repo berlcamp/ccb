@@ -136,6 +136,7 @@ export interface AdministrationTypes {
   position: string
   type: string
   image_url: string
+  on_sidebar: boolean
 }
 
 export interface StudentFormData {
