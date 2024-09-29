@@ -1,8 +1,7 @@
 'use client'
-import OfflinePage from '@/components/Offline'
 import { useSupabase } from '@/context/SupabaseProvider'
 import type { UserAccessTypes } from '@/types'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const FilterContext = React.createContext<any | ''>('')
@@ -13,7 +12,6 @@ export function useFilter() {
 
 export function FilterProvider({ children }: { children: React.ReactNode }) {
   const { systemAccess, session } = useSupabase()
-  const [isOnline, setIsOnline] = useState(true)
   const [filters, setFilters] = useState({})
   const [perPage, setPerPage] = useState(10)
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -42,24 +40,6 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  useEffect(() => {
-    function handleOnlineStatus() {
-      setIsOnline(true)
-    }
-
-    function handleOfflineStatus() {
-      setIsOnline(false)
-    }
-
-    window.addEventListener('online', handleOnlineStatus)
-    window.addEventListener('offline', handleOfflineStatus)
-
-    return () => {
-      window.removeEventListener('online', handleOnlineStatus)
-      window.removeEventListener('offline', handleOfflineStatus)
-    }
-  }, [])
-
   const value = {
     filters,
     setFilters,
@@ -75,15 +55,6 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <FilterContext.Provider value={value}>
-      {!isOnline ? (
-        <>
-          <OfflinePage />
-          <div className="pointer-events-none">{children}</div>
-        </>
-      ) : (
-        children
-      )}
-    </FilterContext.Provider>
+    <FilterContext.Provider value={value}>{children}</FilterContext.Provider>
   )
 }

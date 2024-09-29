@@ -1,5 +1,5 @@
 'use client'
-import { MenuTypes } from '@/types'
+import { MenuTypes, SubmenuTypes } from '@/types'
 import { fetchMenu } from '@/utils/fetchApi'
 import { Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -7,63 +7,50 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
+const SubMenuLink = ({
+  submenu,
+  menuItem,
+  j
+}: {
+  submenu: SubmenuTypes
+  menuItem: MenuTypes
+  j: number
+}) => {
+  // Check if the link is a custom external URL
+  const isExternalLink = submenu.type === 'custom-url'
+
+  return isExternalLink ? (
+    <a
+      key={j}
+      href={`${submenu.slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block px-4 py-2 text-sm text-white hover:bg-green-800"
+    >
+      {submenu.title}
+    </a>
+  ) : (
+    <Link
+      key={j}
+      href={{
+        pathname:
+          submenu.type === 'static-page'
+            ? `/page/${submenu.slug}`
+            : `/pages/${submenu.type}`,
+        query: { mref: menuItem.id }
+      }}
+      className="block px-4 py-2 text-sm text-white hover:bg-green-800"
+    >
+      {submenu.title}
+    </Link>
+  )
+}
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null)
 
   const [dynamicMenu, setDynamicMenu] = useState<MenuTypes[] | []>([])
-
-  // Dropdown Links
-  const dropdownLinks: Record<string, { name: string; href: string }[]> = {
-    'About Us': [
-      { name: 'Mission, Vision, Objectives', href: '/MissionVisionObjectives' },
-      { name: 'Brief History', href: '/BriefHistory' },
-      { name: 'Certification Awards', href: '/pages/certificates' },
-      { name: 'College/School Hymn', href: '/CollegeHymn' },
-      { name: 'Campus Map', href: '/CampusMap' },
-      { name: 'Facilities', href: '/Facilities' },
-      { name: 'Contact Us', href: '/ContactUs' },
-      { name: 'Brochure', href: '/Brochure' }
-    ],
-    Administration: [
-      { name: 'Board of Trustees', href: '/BoardOfTrustees' },
-      { name: 'Executive Management', href: '/ExecutiveManagement' },
-      { name: 'Academic Council', href: '/AcademicCouncil' },
-      { name: 'Administrative Council', href: '/AdministrativeCouncil' }
-    ],
-    Academics: [
-      { name: 'Academic Offerings', href: '/AcademicOfferings' },
-      { name: 'School and Departments', href: '/SchoolsAndDepartments' },
-      { name: 'BCC Students', href: '/BCCStudents' }
-    ],
-    Admission: [
-      { name: 'Admission Requirements', href: '/AdmissionRequirements' },
-      { name: 'Admission Policy', href: '/AdmissionPolicy' },
-      { name: 'Enrollment Guide', href: '/EnrollmentGuide' },
-      { name: 'Scholarships', href: '/Scholarships' },
-      { name: 'Application for Admission', href: '/ApplicationForAdmission' },
-      { name: 'Pre-Registration', href: '/PreRegistration' }
-    ],
-    Research: [
-      { name: 'Journal', href: '/Journal' },
-      { name: 'BCC Research Center', href: '/BCCResearchCenter' }
-    ],
-    Services: [
-      { name: 'Online Grade Inquiry', href: '/OnlineGradeInquiry' },
-      { name: 'School/College Library', href: '/SchoolLibrary' },
-      { name: 'Guidance and Counseling', href: '/GuidanceAndCounseling' },
-      { name: 'Student Affairs', href: '/StudentAffairs' },
-      {
-        name: 'Community Extension Program',
-        href: '/CommunityExtensionProgram'
-      }
-    ],
-    Updates: [
-      { name: 'News', href: '/pages/news' },
-      { name: 'Photo Gallery', href: '/PhotoGallery' },
-      { name: 'Job Opportunity', href: '/JobOpportunity' }
-    ]
-  }
 
   useEffect(() => {
     // Fetch menus
@@ -131,21 +118,26 @@ export default function Header() {
                   <div className="absolute mt-2 w-56 origin-top-right bg-green-900 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {menuItem.sub_menus.length > 0 &&
                       menuItem.sub_menus.map((submenu, j) => (
-                        <Link
-                          key={j}
-                          href={{
-                            pathname:
-                              submenu.type === 'static-page'
-                                ? `/page/${submenu.slug}`
-                                : submenu.type === 'custom-url'
-                                ? `${submenu.slug}`
-                                : `/pages/${submenu.type}`,
-                            query: { mref: menuItem.id }
-                          }}
-                          className="block px-4 py-2 text-sm text-white hover:bg-green-800"
-                        >
-                          {submenu.title}
-                        </Link>
+                        <SubMenuLink
+                          submenu={submenu}
+                          menuItem={menuItem}
+                          j={j}
+                        />
+                        // <Link
+                        //   key={j}
+                        //   href={{
+                        //     pathname:
+                        //       submenu.type === 'static-page'
+                        //         ? `/page/${submenu.slug}`
+                        //         : submenu.type === 'custom-url'
+                        //         ? `${submenu.slug}`
+                        //         : `/pages/${submenu.type}`,
+                        //     query: { mref: menuItem.id }
+                        //   }}
+                        //   className="block px-4 py-2 text-sm text-white hover:bg-green-800"
+                        // >
+                        //   {submenu.title}
+                        // </Link>
                       ))}
                   </div>
                 </Transition>
