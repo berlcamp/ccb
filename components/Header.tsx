@@ -23,7 +23,6 @@ const SubMenuLink = ({
     <a
       key={j}
       href={`${submenu.slug}`}
-      target="_blank"
       rel="noopener noreferrer"
       className="block px-4 py-2 text-sm text-white hover:bg-green-800"
     >
