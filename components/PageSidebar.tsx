@@ -11,6 +11,47 @@ interface PropTypes {
   sidebarItem?: AdministrationTypes | null
 }
 
+const SubMenuLink = ({
+  submenu,
+  mref,
+  j
+}: {
+  submenu: SubmenuTypes
+  mref: string
+  j: number
+}) => {
+  // Check if the link is a custom external URL
+  const isExternalLink = submenu.type === 'custom-url'
+
+  return isExternalLink ? (
+    <Link
+      key={j}
+      href={`${submenu.slug}`}
+      rel="noopener noreferrer"
+      className="flex items-center justify-start space-x-2"
+    >
+      <ChevronRight className="w-4 h-4" />
+      <span>{submenu.title}</span>
+    </Link>
+  ) : (
+    <Link
+      href={{
+        pathname:
+          submenu.type === 'static-page'
+            ? `/page/${submenu.slug}`
+            : submenu.type === 'custom-url'
+            ? `${submenu.slug}`
+            : `/pages/${submenu.type}`,
+        query: mref
+      }}
+      className="flex items-center justify-start space-x-2"
+    >
+      <ChevronRight className="w-4 h-4" />
+      <span>{submenu.title}</span>
+    </Link>
+  )
+}
+
 export default function PageSidebar({ sidebarItem = null }: PropTypes) {
   const searchParams = useSearchParams()
   const mref = searchParams.get('mref') // Get the "mref" query parameter
@@ -44,21 +85,7 @@ export default function PageSidebar({ sidebarItem = null }: PropTypes) {
           <ul className="space-y-2">
             {submenu.map((submenu, i) => (
               <li key={i}>
-                <Link
-                  href={{
-                    pathname:
-                      submenu.type === 'static-page'
-                        ? `/page/${submenu.slug}`
-                        : submenu.type === 'custom-url'
-                        ? `${submenu.slug}`
-                        : `/pages/${submenu.type}`,
-                    query: destinationQuery
-                  }}
-                  className="flex items-center justify-start space-x-2"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                  <span>{submenu.title}</span>
-                </Link>
+                <SubMenuLink submenu={submenu} mref={mref || ''} j={i} />
               </li>
             ))}
           </ul>
