@@ -45,7 +45,7 @@ const Administrative = () => {
         }
       }
     })()
-  }, [])
+  }, [page])
   return (
     <div className="flex flex-col min-h-screen pt-[74px]">
       <Header />
