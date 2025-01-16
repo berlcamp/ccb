@@ -102,9 +102,9 @@ export default async function AdminLayout({
   if (maintenance) {
     return (
       <html lang="en">
-        <body className="">
-          <div>
-            <h1>Website currently down for maintenance.</h1>
+        <body className="relative bg-gradient-to-r from-lime-500 via-green-400 to-green-600">
+          <div className="mx-20 my-20 bg-white rounded-lg text-center p-8">
+            <h1 className="text-lg">Website currently down for maintenance.</h1>
           </div>
         </body>
       </html>
