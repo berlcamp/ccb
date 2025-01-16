@@ -98,6 +98,15 @@ export default async function AdminLayout({
     return 'Something went wrong, please reload the page.'
   }
 
+  const maintenance = true
+  if (maintenance) {
+    return (
+      <div>
+        <h1>Website currently down for maintenance.</h1>
+      </div>
+    )
+  }
+
   return (
     <html lang="en">
       <body className="relative bg-gradient-to-r from-lime-500 via-green-400 to-green-600">
