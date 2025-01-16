@@ -101,9 +101,13 @@ export default async function AdminLayout({
   const maintenance = true
   if (maintenance) {
     return (
-      <div>
-        <h1>Website currently down for maintenance.</h1>
-      </div>
+      <html lang="en">
+        <body className="">
+          <div>
+            <h1>Website currently down for maintenance.</h1>
+          </div>
+        </body>
+      </html>
     )
   }
 
